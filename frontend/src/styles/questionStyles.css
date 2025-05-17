@@ -1,0 +1,36 @@
+/* src/styles/questionStyles.css */
+.question-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.timer-bar {
+  height: 5px;
+  background: #4CAF50;
+  margin-bottom: 15px;
+  transition: width 1s linear;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.option-btn {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.option-btn.selected {
+  border-color: #4CAF50;
+  background-color: #f0fff4;
+}
