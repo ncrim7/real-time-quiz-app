@@ -14,32 +14,22 @@ const Login = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-    localStorage.setItem('token', res.data.token);
+    // 1) Sunucuya istek gönder
+    const { data } = await axios.post('/api/auth/login', { email, password });
     
-    // Backend'den kullanıcı bilgisini alın
-    const userRes = await axios.get('http://localhost:5000/api/auth/me', {
-      headers: { Authorization: `Bearer ${res.data.token}` }
-    });
-    
-    // AuthContext'i güncelleyin
-    login(userRes.data);
+    // 2) Token'ı context'e ve localStorage'a kaydet
+    login(data.token);
+
+    // 3) Kullanıcıya bildirim göster
+    alert('Giriş başarılı! Hoş geldiniz.');
+
+    // 4) Dashboard'a yönlendir
     navigate('/dashboard');
-  } catch (error) {
-    alert('Giriş başarısız!');
+  } catch (err) {
+    alert(err.response?.data?.error || 'Bir hata oluştu');
   }
 };
-  // Giriş işlemi başarılı olduğunda token'ı localStorage'a kaydediyoruz
-  // ve kullanıcıyı dashboard sayfasına yönlendiriyoruz
-  // Giriş işlemi başarısız olursa bir uyarı gösteriyoruz
-  // Giriş formunu oluşturuyoruz
-  // Kullanıcıdan email ve şifre alıyoruz
-  // Form gönderildiğinde handleSubmit fonksiyonunu çağırıyoruz
-  // Giriş işlemi için axios ile POST isteği yapıyoruz
-  // Başarılı olursa token'ı localStorage'a kaydediyoruz
-  // ve kullanıcı bilgilerini AuthContext'e kaydediyoruz
-  // Başarısız olursa bir uyarı gösteriyoruz
-  // Formu oluşturuyoruz
+
   return (
     <form onSubmit={handleSubmit}>
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
