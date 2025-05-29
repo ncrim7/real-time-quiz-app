@@ -1,16 +1,19 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/User");
+// Kullanıcıya ait işlemler (profil bilgisi) için route
+import express from 'express';
+import auth from '../middleware/auth.js';
+import User from '../models/User.js';
 
-router.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+const router = express.Router();
+
+// Giriş yapan kullanıcının profilini getirir
+router.get('/me', auth, async (req, res) => {
   try {
-    const newUser = new User({ username, password });
-    await newUser.save();
-    res.status(201).json({ message: "Kullanıcı kaydedildi." });
-  } catch (error) {
-    res.status(500).json({ error: "Kayıt başarısız." });
+    // Kullanıcıyı id ile bul, şifreyi gönderme
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user); // Kullanıcı bilgilerini döndür
+  } catch (err) {
+    res.status(500).json({ message: 'Sunucu hatası.' });
   }
 });
 
-module.exports = router;
+export default router;
