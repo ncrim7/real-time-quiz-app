@@ -1,42 +1,51 @@
+// Kullanıcı giriş (login) sayfası
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { login } from '../services/api';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  // AuthContext'ten login fonksiyonunu alıyoruz
-  // AuthContext'i kullanarak kullanıcı bilgilerini güncelleyebiliriz
+function Login() {
+  // Email, şifre ve hata mesajı için state'ler
+  const [email, setEmail] = useState(''); // Kullanıcı emaili
+  const [password, setPassword] = useState(''); // Kullanıcı şifresi
+  const [error, setError] = useState(''); // Hata mesajı
+  const navigate = useNavigate(); // Yönlendirme için hook
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    // 1) Sunucuya istek gönder
-    const { data } = await axios.post('/api/auth/login', { email, password });
-    
-    // 2) Token'ı context'e ve localStorage'a kaydet
-    login(data.token);
-
-    // 3) Kullanıcıya bildirim göster
-    alert('Giriş başarılı! Hoş geldiniz.');
-
-    // 4) Dashboard'a yönlendir
-    navigate('/dashboard');
-  } catch (err) {
-    alert(err.response?.data?.error || 'Bir hata oluştu');
-  }
-};
+  // Form submit edildiğinde giriş işlemini yapar
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      // API ile giriş isteği gönder
+      const res = await login(email, password);
+      // Başarılıysa token ve email localStorage'a kaydedilir
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('email', email);
+      alert('Giriş başarılı!');
+      navigate('/'); // Ana sayfaya yönlendir
+    } catch (err) {
+      setError('Giriş başarısız.'); // Hata mesajı göster
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Şifre" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Giriş Yap</button>
-    </form>
+    <div className="card" style={{ padding: 32 }}>
+      <h2>Giriş Yap</h2>
+      {/* Giriş formu */}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Email:</label><br />
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+        </div>
+        <div>
+          <label>Şifre:</label><br />
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+        </div>
+        <button type="submit">Giriş</button>
+      </form>
+      {/* Hata mesajı varsa göster */}
+      {error && <div className="error">{error}</div>}
+    </div>
   );
-};
+}
 
 export default Login;
