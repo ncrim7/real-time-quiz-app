@@ -1,6 +1,51 @@
-# Getting Started with Create React App
+# Kahoot-Clone Frontend (React)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun React tabanlı frontend uygulamasıdır.
+
+## Özellikler
+- Modern ve kullanıcı dostu arayüz (React)
+- Gerçek zamanlı canlı quiz akışı (Socket.io ile backend entegrasyonu)
+- PIN ile quiz odasına katılım ve lobby (bekleme odası)
+- Her oyuncunun kendi cevabını verebilmesi, cevap sonrası butonların kilitlenmesi ve "Diğer oyuncular bekleniyor" mesajı
+- Soru başına zamanlayıcı, otomatik yeni soruya geçiş (tüm oyuncular cevap verince veya süre dolunca)
+- Gerçek zamanlı skor tablosu (puan sıralı)
+- Quiz geçmişi ve kullanıcı profili sayfaları
+- Hata yönetimi ve kullanıcı deneyimi odaklı UX iyileştirmeleri
+
+## Kurulum ve Çalıştırma
+1. Gerekli paketleri yükleyin:
+   ```powershell
+   cd frontend
+   npm install
+   ```
+2. Uygulamayı başlatın:
+   ```powershell
+   npm start
+   ```
+   Uygulama [http://localhost:3000](http://localhost:3000) adresinde çalışacaktır.
+
+## Temel Sayfalar ve Akış
+- **Ana Sayfa:** Kullanıcı girişi, quiz geçmişi ve yönlendirmeler
+- **Quiz Listesi:** Tüm quizleri görüntüleme, quiz oluşturma, düzenleme, silme ve başlatma
+- **Lobby:** Oda PIN'i ile katılım, bekleme odası ve oyuncu listesi
+- **Canlı Quiz:** Soru akışı, zamanlayıcı, cevaplama, skor tablosu ve quiz bitişi
+- **Profil:** Kullanıcı bilgileri ve quiz geçmişi
+
+## Gelişmiş Canlı Quiz Akışı
+- Her oyuncu kendi cevabını verir, cevap verdikten sonra butonlar kilitlenir ve bekleme mesajı gösterilir
+- Tüm oyuncular cevap verince veya süre dolunca otomatik olarak yeni soruya geçilir
+- Soruya hiç cevap verilmezse de otomatik geçiş sağlanır
+- Skor tablosu puana göre anlık güncellenir
+- Quiz sonunda skorlar ve geçmiş kaydedilir
+
+## Geliştirici Notları
+- Kodda tüm önemli event ve state yönetimi açıklamalı olarak yazılmıştır
+- Socket.io eventleri ve quiz akışı backend ile tam entegredir
+- Son kullanıcı deneyimi ve hata yönetimi için ek testler ve UX iyileştirmeleri yapılmıştır
+
+---
+
+Aşağıdaki komutlar Create React App altyapısı için geçerlidir.
 
 ## Available Scripts
 

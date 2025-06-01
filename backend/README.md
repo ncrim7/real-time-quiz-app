@@ -8,6 +8,9 @@
 - Quiz oluşturma, başlatma, bitirme, oda kodu ile katılım
 - Kullanıcıya özel quiz geçmişi ve skor kaydı
 - Modern, güvenli ve ölçeklenebilir altyapı
+- **Çok oyunculu canlı quiz:** PIN ile katılım, lobby (bekleme odası), zamanlayıcı, eşzamanlı soru akışı, skor tablosu, quiz geçmişi ve kullanıcı profili
+- **Gerçek zamanlı otomasyon:** Her oyuncu kendi cevabını verebilir, tüm oyuncular cevap verince veya süre dolunca otomatik olarak yeni soruya geçilir
+- **Bağlantı ve edge-case yönetimi:** Bağlantı kopması, yeniden katılım gibi durumlar için temel altyapı
 
 ## Kurulum
 1. Gerekli paketleri yükleyin:
@@ -35,15 +38,25 @@
 ## Socket.io Eventleri
 - `joinRoom` : { roomCode, username } ile odaya katılım
 - `getQuestion` : Odanın mevcut sorusunu getirir
-- `sendAnswer` : { roomCode, answer, userId } ile cevap gönderir
-- `nextQuestion` : Sonraki soruya geçer
+- `sendAnswer` : { roomCode, answer, userId, username } ile cevap gönderir
+- `nextQuestion` : Sonraki soruya geçer (artık backend otomasyonu ile)
+- `autoNextQuestion` : Süre dolunca veya tüm oyuncular cevap verince backend tarafından otomatik tetiklenir
 - `updateScores` : Skor tablosunu günceller
 - `quizEnd` : Quiz bittiğinde skorları gönderir
+- `lobbyStarted`, `lobbyTimer`, `lobbyPlayers`, `lobbyEnd` : Lobby yönetimi için eventler
+- `receiveAnswer` : Her oyuncunun cevabı geldiğinde tetiklenir
+
+## Canlı Quiz Akışı
+- Her oyuncu kendi cevabını verebilir, cevap verdikten sonra cevabı kilitlenir ve "Diğer oyuncular bekleniyor" mesajı gösterilir
+- Tüm oyuncular cevap verirse veya süre dolarsa backend otomatik olarak yeni soruya geçer
+- Soruya hiç cevap verilmezse de otomatik geçiş sağlanır
+- Skor tablosu puana göre sıralanır, quiz sonunda geçmiş ve skorlar kaydedilir
 
 ## Quiz Geçmişi
-- Her kullanıcıya özel quiz geçmişi ve skorlar otomatik kaydedilir.
-- `/api/user/me` endpointi ile geçmiş görüntülenebilir.
+- Her kullanıcıya özel quiz geçmişi ve skorlar otomatik kaydedilir
+- `/api/user/me` endpointi ile geçmiş görüntülenebilir
 
 ## Notlar
-- Tüm endpointler ve socket eventleri için detaylı açıklamalar kod içinde mevcuttur.
-- Gelişmiş özellikler ve güvenlik için kodu inceleyiniz.
+- Kodda tüm endpointler ve socket eventleri için detaylı açıklamalar mevcuttur
+- Son kullanıcı deneyimi ve hata yönetimi için ek testler ve iyileştirmeler yapılmıştır
+- Gelişmiş özellikler ve güvenlik için kodu inceleyiniz

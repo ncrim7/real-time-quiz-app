@@ -10,6 +10,7 @@ import QuizCreate from './pages/QuizCreate';
 import LiveQuiz from './pages/LiveQuiz';
 import PlayQuiz from './pages/PlayQuiz';
 import Profile from './pages/Profile';
+import Lobby from './pages/Lobby';
 
 function App() {
   // Kullanıcı oturum bilgisini tutan state
@@ -80,6 +81,7 @@ function App() {
           <Route path="/live-quiz" element={<LiveQuiz />} />
           <Route path="/play-quiz/:id" element={<PlayQuiz />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/lobby" element={<Lobby />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>

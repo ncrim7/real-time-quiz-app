@@ -104,6 +104,17 @@ function QuizList() {
     setEditQuestions([]);
   };
 
+  // Quiz başlatma fonksiyonu
+  const handleStart = async (quizId) => {
+    try {
+      const res = await axios.post(`http://localhost:5000/api/quiz/${quizId}/start`);
+      const roomCode = res.data.roomCode;
+      navigate('/lobby', { state: { roomCode } });
+    } catch {
+      alert('Quiz başlatılamadı.');
+    }
+  };
+
   return (
     <div style={{ maxWidth: 700, margin: '0 auto' }}>
       <h2>Quizler</h2>
@@ -116,11 +127,12 @@ function QuizList() {
           <button onClick={() => navigate(`/play-quiz/${quiz._id}`)}>
             Quiz Oyna
           </button>
-          {/* Eğer quiz kullanıcınınsa düzenle ve sil butonları göster */}
+          {/* Eğer quiz kullanıcınınsa düzenle, sil ve başlat butonları göster */}
           {quiz.createdBy?.email === userEmail && (
             <>
               <button style={{ background: 'var(--secondary)', marginLeft: 8 }} onClick={() => handleEdit(quiz)}>Düzenle</button>
               <button style={{ background: 'var(--danger)', marginLeft: 8 }} onClick={() => handleDelete(quiz._id)}>Sil</button>
+              <button style={{ background: 'var(--primary)', marginLeft: 8 }} onClick={() => handleStart(quiz._id)}>Başlat (Canlı)</button>
             </>
           )}
         </div>

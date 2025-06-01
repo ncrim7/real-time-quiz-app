@@ -1,6 +1,6 @@
 # Kahoot-Clone
 
-Gerçek zamanlı quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, quiz oluşturabilir, canlı quiz oturumlarına katılabilir ve skor tablosu görebilir.
+Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, quiz oluşturabilir, canlı quiz oturumlarına PIN ile katılabilir ve skor tablosu görebilir. Canlı quizde lobby, zamanlayıcı, eşzamanlı soru akışı, otomatik soru geçişi ve quiz geçmişi gibi modern özellikler sunar.
 
 ## Teknolojiler
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Socket.io
@@ -9,14 +9,16 @@ Gerçek zamanlı quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, qu
 ## Temel Özellikler
 - Kullanıcı kaydı ve girişi (JWT ile)
 - Quiz oluşturma, listeleme, oynama
-- Canlı quiz odası (oda kodu ile katılım)
-- Gerçek zamanlı skor tablosu
-- Kullanıcıya özel quiz geçmişi ve skor kaydı
+- Canlı quiz odası (PIN/oda kodu ile katılım, lobby, zamanlayıcı)
+- Her oyuncunun kendi cevabını verebilmesi, cevap sonrası butonların kilitlenmesi ve "Diğer oyuncular bekleniyor" mesajı
+- Tüm oyuncular cevap verince veya süre dolunca otomatik yeni soruya geçiş
+- Gerçek zamanlı skor tablosu (puan sıralı)
+- Quiz geçmişi ve kullanıcı profili
 - Modern ve kullanıcı dostu arayüz
 
 ## Klasör Yapısı
-- `backend/` : API, socket, modeller, route'lar
-- `frontend/` : React uygulaması, sayfalar, servisler
+- `backend/` : API, socket, modeller, route'lar, canlı quiz event yönetimi
+- `frontend/` : React uygulaması, sayfalar, servisler, canlı quiz ve lobby akışı
 
 ## Kurulum
 1. **Backend** için:
@@ -33,11 +35,14 @@ Gerçek zamanlı quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, qu
    ```
 
 ## Gelişmiş Özellikler
-- Quiz geçmişi ve skorlar
-- Oyun başlatma/bitirme yönetimi
+- Gerçek zamanlı çok oyunculu quiz akışı (PIN ile katılım, lobby, zamanlayıcı, otomatik soru geçişi)
+- Her oyuncu kendi cevabını verebilir, cevap sonrası bekleme mesajı ve UI/UX iyileştirmeleri
+- Quiz geçmişi ve skorlar otomatik kaydedilir, profil sayfasında görüntülenir
+- Oyun başlatma/bitirme, skor tablosu, bağlantı kopması ve yeniden katılım için temel altyapı
 - Admin paneli (isteğe bağlı)
 - Multimedya desteği (isteğe bağlı)
 
 ## Notlar
 - Kodun tamamında açıklamalar ve örnekler mevcuttur.
-- Detaylı kullanım ve API için backend/README.md dosyasına bakınız.
+- Son kullanıcı deneyimi ve hata yönetimi için ek testler ve iyileştirmeler yapılmıştır.
+- Detaylı kullanım ve API için `backend/README.md` ve `frontend/README.md` dosyalarına bakınız.

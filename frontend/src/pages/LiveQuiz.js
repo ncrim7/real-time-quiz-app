@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import { getQuizByRoomCode } from '../services/api';
 import Leaderboard from './Leaderboard';
 import QuestionTimer from './QuestionTimer';
+import { useLocation } from 'react-router-dom';
 
 // Socket.io bağlantısı (backend ile gerçek zamanlı iletişim)
 const socket = io('http://localhost:5000');
@@ -20,7 +21,9 @@ function LiveQuiz() {
   const [showTimer, setShowTimer] = useState(false); // Zamanlayıcı gösterilsin mi
   const [quizEnd, setQuizEnd] = useState(false); // Quiz bitti mi
   const [scores, setScores] = useState([]); // Skor tablosu
+  const [waitingOthers, setWaitingOthers] = useState(false); // Diğer oyuncuları bekliyor muyuz?
   const userIdRef = useRef(socket.id); // Socket id referansı
+  const location = useLocation();
 
   // Socket eventleri: quiz akışını ve skorları yönetir
   useEffect(() => {
@@ -30,6 +33,7 @@ function LiveQuiz() {
       setQuestion(question);
       setAnswer('');
       setShowTimer(true);
+      setWaitingOthers(false); // Yeni soru gelince bekleme kalkar
     });
     // Cevap alındığında (isteğe bağlı kullanılabilir)
     socket.on('receiveAnswer', ({ userId, answer, isCorrect }) => {
@@ -45,35 +49,54 @@ function LiveQuiz() {
       setScores(scores);
       setShowTimer(false);
     });
+    // Backend'den autoNextQuestion gelirse yeni soruya geç
+    socket.on('autoNextQuestion', () => {
+      socket.emit('nextQuestion', roomCode);
+      setWaitingOthers(false); // Yeni soru tetiklenince bekleme kalkar
+    });
+    // LobbyEnd event'i ile quiz başlatılır
+    socket.on('lobbyEnd', async () => {
+      // Oda kodu ile quiz bilgisini backend'den çek
+      const res = await getQuizByRoomCode(roomCode);
+      setQuiz(res.data);
+      setJoined(true);
+      setQuizEnd(false);
+      setTimeout(() => {
+        socket.emit('getQuestion', roomCode);
+      }, 300); // State güncellensin diye gecikme artırıldı
+    });
     // Component unmount olduğunda eventler temizlenir
     return () => {
       socket.off('question');
       socket.off('receiveAnswer');
       socket.off('updateScores');
       socket.off('quizEnd');
+      socket.off('autoNextQuestion');
+      socket.off('lobbyEnd');
     };
-  }, []);
+  }, [roomCode]);
 
-  // Odaya katılma fonksiyonu
+  // Odaya katılma fonksiyonu (artık sadece lobbyEnd sonrası kullanılacak)
   const joinRoom = async () => {
     if (roomCode && username) {
-      try {
-        // Oda kodu ile quiz bilgisini backend'den çek
-        const res = await getQuizByRoomCode(roomCode);
-        setQuiz(res.data);
-        setJoined(true);
-        setQuizEnd(false);
-        // Odaya katıl ve kullanıcı adını gönder
-        socket.emit('joinRoom', { roomCode, username });
-        // İlk soruyu başlat
-        socket.emit('getQuestion', roomCode);
-      } catch {
-        alert('Oda kodu ile aktif quiz bulunamadı!');
-      }
+      // Sadece lobbyEnd ile başlatılacak, burada getQuestion tetiklenmeyecek
+      setJoined(true);
+      setQuizEnd(false);
+      socket.emit('joinRoom', { roomCode, username });
     } else {
       alert('Oda kodu ve kullanıcı adı zorunludur!');
     }
   };
+
+  // Lobby'den yönlendirme ile gelindiyse roomCode ve username state'ini al
+  useEffect(() => {
+    if (location.state && location.state.roomCode) {
+      setRoomCode(location.state.roomCode);
+    }
+    if (location.state && location.state.username) {
+      setUsername(location.state.username);
+    }
+  }, [location.state]);
 
   // Cevap gönderme fonksiyonu
   const sendAnswer = (selected) => {
@@ -81,14 +104,12 @@ function LiveQuiz() {
       socket.emit('sendAnswer', {
         roomCode,
         answer: selected,
-        userId: userIdRef.current
+        userId: userIdRef.current,
+        username // username'i de gönder
       });
       setAnswer(selected);
       setShowTimer(false);
-      // Demo amaçlı: 1 sn sonra sıradaki soruya geç (gerçekte tüm oyuncular cevaplayınca veya süre bitince tetiklenmeli)
-      setTimeout(() => {
-        socket.emit('nextQuestion', roomCode);
-      }, 1000);
+      setWaitingOthers(true); // Cevap verince diğer oyuncuları bekle
     }
   };
 
@@ -142,6 +163,8 @@ function LiveQuiz() {
         {showTimer && <QuestionTimer duration={10} onTimeout={handleTimeout} />}
         {/* Kullanıcı cevabı */}
         {answer && <div className="success">Cevabınız: {answer}</div>}
+        {/* Diğer oyuncuları bekleme mesajı */}
+        {waitingOthers && <div style={{ color: '#888', marginTop: 12 }}>Diğer oyuncular bekleniyor...</div>}
       </div>
       {/* Skor tablosu */}
       <Leaderboard roomId={roomCode} scores={scores} />
