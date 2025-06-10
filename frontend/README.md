@@ -1,15 +1,19 @@
 # Kahoot-Clone Frontend (React)
 
-Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun React tabanlı frontend uygulamasıdır.
+Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun React tabanlı frontend uygulamasıdır. Modern dashboard, kullanıcı profili, admin paneli ve canlı quiz yönetimi ile tam entegre bir deneyim sunar.
 
 ## Özellikler
-- Modern ve kullanıcı dostu arayüz (React)
+- Modern ve kullanıcı dostu arayüz (React + Material UI)
 - Gerçek zamanlı canlı quiz akışı (Socket.io ile backend entegrasyonu)
 - PIN ile quiz odasına katılım ve lobby (bekleme odası)
+- Quiz başlatma ve canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi için)
+- Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi
+- Admin paneli: kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma
+- Quiz oluşturma, düzenleme, silme ve oynama
 - Her oyuncunun kendi cevabını verebilmesi, cevap sonrası butonların kilitlenmesi ve "Diğer oyuncular bekleniyor" mesajı
 - Soru başına zamanlayıcı, otomatik yeni soruya geçiş (tüm oyuncular cevap verince veya süre dolunca)
 - Gerçek zamanlı skor tablosu (puan sıralı)
-- Quiz geçmişi ve kullanıcı profili sayfaları
+- Quiz geçmişi ve kullanıcı profili dashboard'u
 - Hata yönetimi ve kullanıcı deneyimi odaklı UX iyileştirmeleri
 
 ## Kurulum ve Çalıştırma
@@ -27,9 +31,11 @@ Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun Rea
 ## Temel Sayfalar ve Akış
 - **Ana Sayfa:** Kullanıcı girişi, quiz geçmişi ve yönlendirmeler
 - **Quiz Listesi:** Tüm quizleri görüntüleme, quiz oluşturma, düzenleme, silme ve başlatma
-- **Lobby:** Oda PIN'i ile katılım, bekleme odası ve oyuncu listesi
+- **Quiz Oluştur:** Modern form ile yeni quiz ekleme
+- **Lobby:** Oda PIN'i ile katılım, bekleme odası, oyuncu listesi ve quiz sahibi için quiz sonlandırma
 - **Canlı Quiz:** Soru akışı, zamanlayıcı, cevaplama, skor tablosu ve quiz bitişi
-- **Profil:** Kullanıcı bilgileri ve quiz geçmişi
+- **Profil:** Kullanıcı bilgileri, quiz geçmişi ve istatistikler (dashboard)
+- **Admin Paneli:** Sadece admin rolü için, kullanıcı/quiz yönetimi, analytics ve canlı quiz kontrolü
 
 ## Gelişmiş Canlı Quiz Akışı
 - Her oyuncu kendi cevabını verir, cevap verdikten sonra butonlar kilitlenir ve bekleme mesajı gösterilir
@@ -41,6 +47,7 @@ Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun Rea
 ## Geliştirici Notları
 - Kodda tüm önemli event ve state yönetimi açıklamalı olarak yazılmıştır
 - Socket.io eventleri ve quiz akışı backend ile tam entegredir
+- Modern dashboard ve admin paneli ile tam yönetim deneyimi
 - Son kullanıcı deneyimi ve hata yönetimi için ek testler ve UX iyileştirmeleri yapılmıştır
 
 ---
