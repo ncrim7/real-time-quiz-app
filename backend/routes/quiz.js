@@ -127,4 +127,23 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
+// Bireysel quiz tamamlandığında quiz geçmişi ekle
+router.post('/:id/history', auth, async (req, res) => {
+  try {
+    const { score, date, mode } = req.body;
+    const quiz = await Quiz.findById(req.params.id);
+    if (!quiz) return res.status(404).json({ message: 'Quiz bulunamadı.' });
+    const user = await (await import('../models/User.js')).default.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
+    // Aynı quiz için tekrar tekrar kayıt eklenmesini önlemek için kontrol (isteğe bağlı)
+    const already = user.quizHistory.find(q => q.quizId.toString() === req.params.id && q.mode === (mode || 'bireysel'));
+    if (already) return res.status(400).json({ message: 'Bu quiz geçmişte zaten kaydedilmiş.' });
+    user.quizHistory.push({ quizId: req.params.id, score, date: date ? new Date(date) : new Date(), mode: mode || 'bireysel' });
+    await user.save();
+    res.json({ message: 'Quiz geçmişi kaydedildi.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Quiz geçmişi kaydedilemedi.' });
+  }
+});
+
 export default router;

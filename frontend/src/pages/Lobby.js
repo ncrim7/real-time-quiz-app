@@ -14,6 +14,25 @@ function Lobby() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Refresh sonrası roomCode ve username'i localStorage'dan yükle
+  useEffect(() => {
+    // Eğer state yoksa localStorage'dan yükle
+    if (!location.state) {
+      const savedRoom = localStorage.getItem('lobbyRoomCode');
+      const savedUser = localStorage.getItem('lobbyUsername');
+      if (savedRoom && savedUser) {
+        setRoomCode(savedRoom);
+        setUsername(savedUser);
+        setJoined(true);
+        socket.emit('joinLobby', { roomCode: savedRoom, username: savedUser });
+      }
+    } else {
+      // State varsa localStorage'a kaydet
+      if (location.state.roomCode) localStorage.setItem('lobbyRoomCode', location.state.roomCode);
+      if (location.state.username) localStorage.setItem('lobbyUsername', location.state.username);
+    }
+  }, [location.state]);
+
   // Oyun sahibi için roomCode location.state ile gelir
   useEffect(() => {
     if (location.state && location.state.roomCode) {
@@ -26,6 +45,8 @@ function Lobby() {
   // Katılımcı PIN ile giriş yaparsa
   const handleJoin = () => {
     if (roomCode && username) {
+      localStorage.setItem('lobbyRoomCode', roomCode);
+      localStorage.setItem('lobbyUsername', username);
       socket.emit('joinLobby', { roomCode, username });
       setJoined(true);
     }
@@ -42,8 +63,10 @@ function Lobby() {
     socket.on('lobbyPlayers', ({ players }) => {
       setPlayers(players);
     });
+    // LobbyEnd ile oyun başlarsa localStorage temizle
     socket.on('lobbyEnd', () => {
-      // Oyun başlasın (canlı quiz sayfasına yönlendir)
+      localStorage.removeItem('lobbyRoomCode');
+      localStorage.removeItem('lobbyUsername');
       navigate('/live-quiz', { state: { roomCode, username } });
     });
     return () => {
@@ -67,6 +90,28 @@ function Lobby() {
   }
 
   // Oyun sahibi ve katılımcılar için lobby ekranı
+  // Oyun sahibi (quiz başlatan) için quiz sonlandır butonu göster
+  const isOwner = localStorage.getItem('email') && location.state && location.state.isOwner;
+
+  // Quiz'i sonlandırma fonksiyonu
+  const handleEndQuiz = async () => {
+    try {
+      // Aktif quiz id'sini backend'den çekmek için roomCode ile quiz getir
+      const res = await fetch(`http://localhost:5000/api/quiz/room/${roomCode}`);
+      const quiz = await res.json();
+      if (quiz && quiz._id) {
+        await fetch(`http://localhost:5000/api/quiz/${quiz._id}/end`, { method: 'POST' });
+        alert('Quiz sonlandırıldı.');
+        // Odayı terk et ve ana sayfaya yönlendir
+        localStorage.removeItem('lobbyRoomCode');
+        localStorage.removeItem('lobbyUsername');
+        navigate('/');
+      }
+    } catch {
+      alert('Quiz sonlandırılamadı.');
+    }
+  };
+
   return (
     <div className="card" style={{ padding: 32 }}>
       <h2>Oyun Bekleme Odası</h2>
@@ -74,6 +119,12 @@ function Lobby() {
       <div>Katılımcı sayısı: {players}</div>
       <div style={{ margin: '16px 0', fontSize: 18 }}>Oyun {seconds} saniye sonra başlayacak...</div>
       <div style={{ color: '#888', fontSize: 14 }}>Arkadaşlarınıza PIN'i verin, onlar da katılsın!</div>
+      {/* Sadece quiz sahibi için quiz sonlandır butonu */}
+      {isOwner && (
+        <button onClick={handleEndQuiz} style={{ marginTop: 18, background: 'var(--danger)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>
+          Quizi Sonlandır
+        </button>
+      )}
     </div>
   );
 }

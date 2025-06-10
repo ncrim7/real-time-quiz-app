@@ -1,10 +1,10 @@
 # Kahoot-Clone
 
-Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, quiz oluşturabilir, canlı quiz oturumlarına PIN ile katılabilir ve skor tablosu görebilir. Canlı quizde lobby, zamanlayıcı, eşzamanlı soru akışı, otomatik soru geçişi ve quiz geçmişi gibi modern özellikler sunar.
+Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, quiz oluşturabilir, canlı quiz oturumlarına PIN ile katılabilir ve skor tablosu görebilir. Modern admin paneli, kullanıcı profili, gelişmiş dashboard ve yönetim özellikleriyle birlikte gelir.
 
 ## Teknolojiler
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Socket.io
-- **Frontend:** React, modern CSS, responsive tasarım
+- **Frontend:** React, MUI (Material UI), modern CSS, responsive tasarım
 
 ## Temel Özellikler
 - Kullanıcı kaydı ve girişi (JWT ile)
@@ -13,12 +13,15 @@ Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt
 - Her oyuncunun kendi cevabını verebilmesi, cevap sonrası butonların kilitlenmesi ve "Diğer oyuncular bekleniyor" mesajı
 - Tüm oyuncular cevap verince veya süre dolunca otomatik yeni soruya geçiş
 - Gerçek zamanlı skor tablosu (puan sıralı)
-- Quiz geçmişi ve kullanıcı profili
+- Quiz geçmişi ve kullanıcı profili (dashboard)
 - Modern ve kullanıcı dostu arayüz
+- Admin paneli: kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma
+- Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi
+- Canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi için)
 
 ## Klasör Yapısı
 - `backend/` : API, socket, modeller, route'lar, canlı quiz event yönetimi
-- `frontend/` : React uygulaması, sayfalar, servisler, canlı quiz ve lobby akışı
+- `frontend/` : React uygulaması, sayfalar, servisler, modern dashboard, admin paneli, canlı quiz ve lobby akışı
 
 ## Kurulum
 1. **Backend** için:
@@ -37,9 +40,11 @@ Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt
 ## Gelişmiş Özellikler
 - Gerçek zamanlı çok oyunculu quiz akışı (PIN ile katılım, lobby, zamanlayıcı, otomatik soru geçişi)
 - Her oyuncu kendi cevabını verebilir, cevap sonrası bekleme mesajı ve UI/UX iyileştirmeleri
-- Quiz geçmişi ve skorlar otomatik kaydedilir, profil sayfasında görüntülenir
+- Quiz geçmişi ve skorlar otomatik kaydedilir, profil sayfasında ve admin panelinde görüntülenir
 - Oyun başlatma/bitirme, skor tablosu, bağlantı kopması ve yeniden katılım için temel altyapı
-- Admin paneli (isteğe bağlı)
+- Modern admin paneli: kullanıcı, quiz, analytics yönetimi ve canlı quiz kontrolü
+- Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi ve yönetim yetkileri
+- Canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi için)
 - Multimedya desteği (isteğe bağlı)
 
 ## Notlar

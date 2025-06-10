@@ -11,9 +11,11 @@ const userSchema = new mongoose.Schema({
     {
       quizId: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }, // Quiz referansı
       score: Number, // Kullanıcının bu quizdeki skoru
-      date: { type: Date, default: Date.now } // Quizin tamamlandığı tarih
+      date: { type: Date, default: Date.now }, // Quizin tamamlandığı tarih
+      mode: { type: String, default: 'bireysel' } // Oynama modu: 'canli' veya 'bireysel'
     }
-  ]
+  ],
+  role: { type: String, enum: ['user', 'admin'], default: 'user' } // Kullanıcı rolü (admin paneli için)
 });
 
 // User modelini dışa aktar

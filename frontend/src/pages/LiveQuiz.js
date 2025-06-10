@@ -1,10 +1,10 @@
 // Canlı quiz odası ve gerçek zamanlı quiz akışı için ana bileşen
 import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { getQuizByRoomCode } from '../services/api';
+import { getQuizByRoomCode, saveQuizHistory } from '../services/api';
 import Leaderboard from './Leaderboard';
 import QuestionTimer from './QuestionTimer';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Socket.io bağlantısı (backend ile gerçek zamanlı iletişim)
 const socket = io('http://localhost:5000');
@@ -22,8 +22,10 @@ function LiveQuiz() {
   const [quizEnd, setQuizEnd] = useState(false); // Quiz bitti mi
   const [scores, setScores] = useState([]); // Skor tablosu
   const [waitingOthers, setWaitingOthers] = useState(false); // Diğer oyuncuları bekliyor muyuz?
+  const [historySaved, setHistorySaved] = useState(false); // Skor geçmişi kaydedildi mi
   const userIdRef = useRef(socket.id); // Socket id referansı
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Socket eventleri: quiz akışını ve skorları yönetir
   useEffect(() => {
@@ -44,10 +46,25 @@ function LiveQuiz() {
       setScores(newScores);
     });
     // Quiz bittiğinde skorlar ve durum güncellenir
-    socket.on('quizEnd', ({ scores }) => {
+    socket.on('quizEnd', async ({ scores }) => {
       setQuizEnd(true);
       setScores(scores);
       setShowTimer(false);
+      // Quiz geçmişini kaydet (sadece bir kez kaydetmek için kontrol ekle)
+      if (!historySaved && quiz && username) {
+        try {
+          await saveQuizHistory({
+            quizId: quiz._id,
+            score: scores.find(s => s.username === username)?.score || 0,
+            mode: 'canli',
+            date: new Date().toISOString()
+          });
+          setHistorySaved(true);
+        } catch (err) {
+          // Hata yönetimi (opsiyonel bildirim)
+          console.error('Quiz geçmişi kaydedilemedi:', err);
+        }
+      }
     });
     // Backend'den autoNextQuestion gelirse yeni soruya geç
     socket.on('autoNextQuestion', () => {
@@ -120,6 +137,7 @@ function LiveQuiz() {
       socket.emit('nextQuestion', roomCode);
     }, 1000);
   };
+  
 
   // Odaya katılım yoksa katılım formunu göster
   if (!joined) {
@@ -139,6 +157,10 @@ function LiveQuiz() {
       <div className="card" style={{ padding: 32 }}>
         <h2>Quiz Bitti!</h2>
         <Leaderboard roomId={roomCode} scores={scores} />
+        <div style={{ marginTop: 24 }}>
+          <button onClick={() => navigate('/')} style={{ marginRight: 12 }}>Ana Sayfa</button>
+          <button onClick={() => navigate('/profile')}>Profilim / Geçmişim</button>
+        </div>
       </div>
     );
   }
@@ -155,7 +177,17 @@ function LiveQuiz() {
         <ul>
           {question.options.map((opt, i) => (
             <li key={i} style={{ marginBottom: 8 }}>
-              <button disabled={!!answer} onClick={() => sendAnswer(opt)}>{opt}</button>
+              <button
+                disabled={!!answer}
+                onClick={() => sendAnswer(opt)}
+                style={{
+                  opacity: answer && answer !== opt ? 0.5 : 1,
+                  cursor: answer ? 'not-allowed' : 'pointer',
+                  background: answer === opt ? '#d1e7dd' : undefined
+                }}
+              >
+                {opt}
+              </button>
             </li>
           ))}
         </ul>

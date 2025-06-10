@@ -11,6 +11,7 @@ import { Server } from 'socket.io';
 import authRoutes from './routes/auth.js'; // Kimlik doğrulama endpointleri
 import userRoutes from './routes/user.js'; // Kullanıcı endpointleri
 import quizRoutes from './routes/quiz.js'; // Quiz endpointleri
+import adminRoutes from './routes/admin.js'; // Admin endpointleri
 import Quiz from './models/Quiz.js';
 import User from './models/User.js';
 
@@ -34,9 +35,9 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Oda skorları ve quiz state'leri için bellek içi objeler
-const roomScores = {};
 const roomQuizState = {};
 // Lobby zamanlayıcılarını tutmak için
 const lobbyTimers = {};
@@ -181,7 +182,7 @@ io.on('connection', (socket) => {
         scoresArr.forEach(async ({ userId, score }) => {
           const user = await User.findOne({ username: state.scores[userId]?.username });
           if (user) {
-            user.quizHistory.push({ quizId, score, date: new Date() });
+            user.quizHistory.push({ quizId, score, date: new Date(), mode: 'canli' });
             await user.save();
           }
         });
@@ -221,7 +222,7 @@ io.on('connection', (socket) => {
         scoresArr.forEach(async ({ userId, score }) => {
           const user = await User.findOne({ username: state.scores[userId]?.username });
           if (user) {
-            user.quizHistory.push({ quizId, score, date: new Date() });
+            user.quizHistory.push({ quizId, score, date: new Date(), mode: 'canli' });
             await user.save();
           }
         });
@@ -233,11 +234,9 @@ io.on('connection', (socket) => {
   // Kullanıcı bağlantıyı kopardığında
   socket.on('disconnect', () => {
     console.log('Kullanıcı ayrıldı:', socket.id);
-    // Kullanıcı ayrıldığında skor tablosundan çıkar
-    for (const roomId in roomScores) {
-      roomScores[roomId] = roomScores[roomId].filter(s => s.userId !== socket.id);
-      io.to(roomId).emit('updateScores', roomScores[roomId]);
-    }
+    // GEREKSİZ: roomScores ile skor tablosundan çıkarma kodu kaldırıldı
+    // Skor yönetimi roomQuizState ile yapılmalı
+    // Eğer oyuncu roomQuizState'den çıkarılacaksa, burada eklenebilir
   });
 });
 
@@ -251,3 +250,5 @@ mongoose.connect(process.env.MONGODB_URI, {
 }).catch((err) => {
     console.error('MongoDB connection error:', err);
 });
+
+export default app;

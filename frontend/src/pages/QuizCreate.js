@@ -1,6 +1,7 @@
 // Quiz oluşturma sayfası (kullanıcı quiz ve sorularını ekler)
 import React, { useState } from 'react';
 import axios from 'axios';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function QuizCreate() {
   // Quiz başlığı, açıklama ve sorular için state'ler
@@ -60,38 +61,48 @@ function QuizCreate() {
   };
 
   return (
-    <div className="card" style={{ padding: 32 }}>
-      <h2>Quiz Oluştur</h2>
-      {/* Quiz oluşturma formu */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Başlık:</label><br />
-          <input value={title} onChange={e => setTitle(e.target.value)} required />
-        </div>
-        <div>
-          <label>Açıklama:</label><br />
-          <input value={description} onChange={e => setDescription(e.target.value)} required />
-        </div>
-        <h4>Sorular</h4>
-        {/* Her soru için giriş alanları */}
-        {questions.map((q, idx) => (
-          <div key={idx} style={{ marginBottom: 16, background: '#f7f8fa', borderRadius: 8, padding: 12 }}>
-            <b>Soru {idx + 1}:</b><br />
-            <input value={q.text} onChange={e => handleQuestionChange(idx, 'text', e.target.value)} placeholder="Soru metni" required />
-            <div style={{ marginTop: 6 }}>
-              {q.options.map((opt, i) => (
-                <span key={i} style={{ display: 'inline-block', marginRight: 8 }}>
-                  <input value={opt} onChange={e => handleOptionChange(idx, i, e.target.value)} placeholder={`Seçenek ${i + 1}`} required style={{ width: 120 }} />
-                  <input type="radio" name={`correct-${idx}`} checked={q.correctIndex === i} onChange={() => handleCorrectChange(idx, i)} />
-                  <span style={{ fontSize: 13, color: '#888' }}>Doğru</span>
-                </span>
-              ))}
-            </div>
+    <div style={{
+      background: 'linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%)',
+      minHeight: '100vh',
+      padding: '32px 0',
+    }}>
+      <div className="card" style={{ maxWidth: 700, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px #0001', padding: 32 }}>
+        <h2 style={{ display: 'flex', alignItems: 'center', color: '#3b3b5c', fontWeight: 700, fontSize: 28, marginBottom: 24 }}>
+          <AddCircleIcon style={{ marginRight: 10, color: '#6a11cb' }} /> Quiz Oluştur
+        </h2>
+        {/* Quiz oluşturma formu */}
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Başlık:</label><br />
+            <input value={title} onChange={e => setTitle(e.target.value)} required style={{ width: '100%', borderRadius: 8, border: '1px solid #ddd', padding: 8, marginBottom: 10 }} />
           </div>
-        ))}
-        <button type="button" onClick={addQuestion} style={{ background: 'var(--secondary)', marginRight: 8 }}>Soru Ekle</button>
-        <button type="submit">Quiz Oluştur</button>
-      </form>
+          <div>
+            <label>Açıklama:</label><br />
+            <input value={description} onChange={e => setDescription(e.target.value)} required style={{ width: '100%', borderRadius: 8, border: '1px solid #ddd', padding: 8, marginBottom: 10 }} />
+          </div>
+          <h4 style={{ color: '#3b3b5c', marginTop: 18 }}>Sorular</h4>
+          {/* Her soru için giriş alanları */}
+          {questions.map((q, idx) => (
+            <div key={idx} style={{ marginBottom: 16, background: '#f7f8fa', borderRadius: 8, padding: 12 }}>
+              <b>Soru {idx + 1}:</b><br />
+              <input value={q.text} onChange={e => handleQuestionChange(idx, 'text', e.target.value)} placeholder="Soru metni" required style={{ width: '100%', borderRadius: 8, border: '1px solid #ddd', padding: 8, marginBottom: 8 }} />
+              <div style={{ marginTop: 6 }}>
+                {q.options.map((opt, i) => (
+                  <span key={i} style={{ display: 'inline-block', marginRight: 8 }}>
+                    <input value={opt} onChange={e => handleOptionChange(idx, i, e.target.value)} placeholder={`Seçenek ${i + 1}`} required style={{ width: 120, borderRadius: 8, border: '1px solid #ddd', padding: 6 }} />
+                    <input type="radio" name={`correct-${idx}`} checked={q.correctIndex === i} onChange={() => handleCorrectChange(idx, i)} />
+                    <span style={{ fontSize: 13, color: '#888' }}>Doğru</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+          <button type="button" onClick={addQuestion} style={{ background: 'var(--secondary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, marginRight: 8 }}>
+            <AddCircleIcon style={{ marginRight: 4, fontSize: 18 }} /> Soru Ekle
+          </button>
+          <button type="submit" style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600 }}>Quiz Oluştur</button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -43,3 +43,9 @@ export const deleteQuiz = (id, token) =>
   axios.delete(`${API_URL}/quiz/${id}`, {
     headers: { Authorization: 'Bearer ' + token }
   });
+
+// Quiz geçmişi kaydet (bireysel veya canlı, mode parametresi ile)
+export const saveQuizHistory = (quizId, data, token) =>
+  axios.post(`${API_URL}/quiz/${quizId}/history`, data, {
+    headers: { Authorization: 'Bearer ' + token }
+  });
