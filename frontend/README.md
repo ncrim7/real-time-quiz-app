@@ -6,9 +6,10 @@ Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun Rea
 - Modern ve kullanıcı dostu arayüz (React + Material UI)
 - Gerçek zamanlı canlı quiz akışı (Socket.io ile backend entegrasyonu)
 - PIN ile quiz odasına katılım ve lobby (bekleme odası)
-- Quiz başlatma ve canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi veya admin için)
+- Quiz başlatma ve canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi için)
 - Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi
-- **Admin paneli:** kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma, quiz kartında oda kodu gösterimi ve kopyalama, End Live ile oturumu bitirme
+- Admin paneli: kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma
+
 - Quiz oluşturma, düzenleme, silme ve oynama
 - Her oyuncunun kendi cevabını verebilmesi, cevap sonrası butonların kilitlenmesi ve "Diğer oyuncular bekleniyor" mesajı
 - Soru başına zamanlayıcı, otomatik yeni soruya geçiş (tüm oyuncular cevap verince veya süre dolunca)
@@ -33,10 +34,10 @@ Bu proje, gelişmiş çok oyunculu canlı quiz deneyimi sunan bir platformun Rea
 - **Ana Sayfa:** Kullanıcı girişi, quiz geçmişi ve yönlendirmeler
 - **Quiz Listesi:** Tüm quizleri görüntüleme, quiz oluşturma, düzenleme, silme ve başlatma
 - **Quiz Oluştur:** Modern form ile yeni quiz ekleme
-- **Lobby:** Oda PIN'i ile katılım, bekleme odası, oyuncu listesi ve quiz sahibi/admin için quiz sonlandırma
+- **Lobby:** Oda PIN'i ile katılım, bekleme odası, oyuncu listesi ve quiz sahibi için quiz sonlandırma
 - **Canlı Quiz:** Soru akışı, zamanlayıcı, cevaplama, skor tablosu ve quiz bitişi
 - **Profil:** Kullanıcı bilgileri, quiz geçmişi ve istatistikler (dashboard)
-- **Admin Paneli:** Sadece admin rolü için, kullanıcı/quiz yönetimi, analytics ve canlı quiz kontrolü, oda kodu gösterimi ve End Live
+- **Admin Paneli:** Sadece admin rolü için, kullanıcı/quiz yönetimi, analytics ve canlı quiz kontrolü
 
 ## Gelişmiş Canlı Quiz Akışı
 - Her oyuncu kendi cevabını verir, cevap verdikten sonra butonlar kilitlenir ve bekleme mesajı gösterilir
