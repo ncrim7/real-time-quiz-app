@@ -15,9 +15,10 @@ Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt
 - Gerçek zamanlı skor tablosu (puan sıralı)
 - Quiz geçmişi ve kullanıcı profili (dashboard)
 - Modern ve kullanıcı dostu arayüz
-- Admin paneli: kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma
-- Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi
-- Canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi için)
+- **Admin paneli:** kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma, quiz kartında oda kodu gösterimi ve kopyalama, End Live ile oturumu bitirme
+- Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi ve yönetim yetkileri
+- Canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi veya admin için)
+- Arka plan müziği ile quiz deneyimini zenginleştirme
 
 ## Klasör Yapısı
 - `backend/` : API, socket, modeller, route'lar, canlı quiz event yönetimi
@@ -42,9 +43,9 @@ Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt
 - Her oyuncu kendi cevabını verebilir, cevap sonrası bekleme mesajı ve UI/UX iyileştirmeleri
 - Quiz geçmişi ve skorlar otomatik kaydedilir, profil sayfasında ve admin panelinde görüntülenir
 - Oyun başlatma/bitirme, skor tablosu, bağlantı kopması ve yeniden katılım için temel altyapı
-- Modern admin paneli: kullanıcı, quiz, analytics yönetimi ve canlı quiz kontrolü
+- Modern admin paneli: kullanıcı, quiz, analytics yönetimi ve canlı quiz kontrolü, oda kodu gösterimi ve End Live
 - Sadece admin rolüne sahip kullanıcılar için admin paneli erişimi ve yönetim yetkileri
-- Canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi için)
+- Canlı quiz bekleme odasında quiz sonlandırma (sadece quiz sahibi veya admin için)
 - Multimedya desteği (isteğe bağlı)
 
 ## Notlar
