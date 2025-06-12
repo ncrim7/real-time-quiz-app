@@ -39,6 +39,21 @@ router.post('/quiz/:id/start', auth, isAdmin, async (req, res) => {
   res.json({ roomCode });
 });
 
+// Quiz canlı oturumu sonlandır (admin)
+router.post('/quiz/:id/end', auth, isAdmin, async (req, res) => {
+  try {
+    const quiz = await Quiz.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false, roomCode: null },
+      { new: true }
+    );
+    if (!quiz) return res.status(404).json({ message: 'Quiz bulunamadı.' });
+    res.json({ message: 'Quiz sonlandırıldı.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Quiz sonlandırılamadı.' });
+  }
+});
+
 // Tüm kullanıcıları getir
 router.get('/users', auth, isAdmin, async (req, res) => {
   const users = await User.find({}, '-password');

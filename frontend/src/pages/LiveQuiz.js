@@ -9,6 +9,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // Socket.io bağlantısı (backend ile gerçek zamanlı iletişim)
 const socket = io('http://localhost:5000');
 
+// Arka plan müziği için basit bir mp3 dosyası (public klasörüne eklenmeli)
+const MUSIC_URL = process.env.PUBLIC_URL + '/quiz-music.mp3';
+
 function LiveQuiz() {
   // State'ler: oda kodu, kullanıcı adı, quiz objesi, sorular, skorlar, vs.
   const [roomCode, setRoomCode] = useState(''); // Oda kodu
@@ -26,6 +29,9 @@ function LiveQuiz() {
   const userIdRef = useRef(socket.id); // Socket id referansı
   const location = useLocation();
   const navigate = useNavigate();
+  // Arka plan müziği için ref ve state
+  const audioRef = useRef(null);
+  const [musicPlaying, setMusicPlaying] = useState(true);
 
   // Socket eventleri: quiz akışını ve skorları yönetir
   useEffect(() => {
@@ -155,11 +161,13 @@ function LiveQuiz() {
   if (quizEnd) {
     return (
       <div className="card" style={{ padding: 32 }}>
+        <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
         <h2>Quiz Bitti!</h2>
         <Leaderboard roomId={roomCode} scores={scores} />
         <div style={{ marginTop: 24 }}>
           <button onClick={() => navigate('/')} style={{ marginRight: 12 }}>Ana Sayfa</button>
           <button onClick={() => navigate('/profile')}>Profilim / Geçmişim</button>
+          <button style={{ marginLeft: 16 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
         </div>
       </div>
     );
@@ -171,7 +179,9 @@ function LiveQuiz() {
   // Quiz sırasında soru ve seçenekleri, zamanlayıcı ve skor tablosu göster
   return (
     <div className="quiz-card" style={{ padding: 32 }}>
+      <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
       <h2>{quiz?.title || 'Canlı Quiz'}</h2>
+      <button style={{ marginBottom: 12 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
       <div style={{ marginBottom: 16 }}>
         <b>{question.text}</b>
         <ul>

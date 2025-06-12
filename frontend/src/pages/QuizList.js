@@ -1,22 +1,22 @@
 // Tüm quizleri listeleyen sayfa
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { deleteQuiz, updateQuiz } from '../services/api';
 import QuizIcon from '@mui/icons-material/Quiz';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import LoginIcon from '@mui/icons-material/Login';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
 
 function QuizList() {
   // Quiz listesini tutan state
   const [quizzes, setQuizzes] = useState([]);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem('email'));
+  const [userEmail] = useState(localStorage.getItem('email'));
   const [editQuiz, setEditQuiz] = useState(null); // Düzenlenen quiz
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editQuestions, setEditQuestions] = useState([]);
   const [showEdit, setShowEdit] = useState(false);
+  const [liveRoomCodes, setLiveRoomCodes] = useState({});
+  const isAdmin = localStorage.getItem('role') === 'admin';
   const navigate = useNavigate(); // Yönlendirme için hook
 
   // Sayfa yüklendiğinde quizleri backend'den çek
@@ -82,32 +82,6 @@ function QuizList() {
     setEditQuestions(updated);
   };
 
-  // Quiz düzenleme modalı için gelişmiş yardımcılar
-  const handleEditAddQuestion = () => {
-    setEditQuestions([
-      ...editQuestions,
-      { text: '', options: ['', '', '', ''], correctIndex: 0 }
-    ]);
-  };
-  const handleEditDeleteQuestion = (idx) => {
-    if (editQuestions.length === 1) {
-      alert('En az bir soru olmalı!');
-      return;
-    }
-    if (window.confirm('Bu soruyu silmek istediğinize emin misiniz?')) {
-      setEditQuestions(editQuestions.filter((_, i) => i !== idx));
-    }
-  };
-
-  // Modal kapatıldığında state sıfırlama
-  const handleCloseEdit = () => {
-    setShowEdit(false);
-    setEditQuiz(null);
-    setEditTitle('');
-    setEditDescription('');
-    setEditQuestions([]);
-  };
-
   // Quiz başlatma fonksiyonu
   const handleStart = async (quizId) => {
     try {
@@ -116,6 +90,36 @@ function QuizList() {
       navigate('/lobby', { state: { roomCode, isOwner: true } });
     } catch {
       alert('Quiz başlatılamadı.');
+    }
+  };
+
+  // Admin quiz canlı başlatma
+  const handleAdminStart = async (quizId) => {
+    try {
+      const res = await axios.post(`/api/admin/quiz/${quizId}/start`, {}, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+      });
+      const roomCode = res.data.roomCode;
+      setLiveRoomCodes(prev => ({ ...prev, [quizId]: roomCode }));
+      setQuizzes(quizzes => quizzes.map(q => q._id === quizId ? { ...q, isActive: true, roomCode } : q));
+    } catch {
+      alert('Quiz başlatılamadı.');
+    }
+  };
+  // Admin quiz canlı oturumu sonlandırma
+  const handleAdminEndLive = async (quizId) => {
+    try {
+      await axios.post(`/api/admin/quiz/${quizId}/end`, {}, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+      });
+      setLiveRoomCodes(prev => {
+        const updated = { ...prev };
+        delete updated[quizId];
+        return updated;
+      });
+      setQuizzes(quizzes => quizzes.map(q => q._id === quizId ? { ...q, isActive: false, roomCode: undefined } : q));
+    } catch {
+      alert('Oturum sonlandırılamadı.');
     }
   };
 
@@ -145,6 +149,23 @@ function QuizList() {
                 <button style={{ background: 'var(--danger)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 14px', fontWeight: 600, marginLeft: 8, cursor: 'pointer' }} onClick={() => handleDelete(quiz._id)}>Sil</button>
                 <button style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 14px', fontWeight: 600, marginLeft: 8, cursor: 'pointer' }} onClick={() => handleStart(quiz._id)}>Başlat (Canlı)</button>
               </>
+            )}
+            {/* Admin için canlı başlat, bitir ve oda kodu gösterimi */}
+            {isAdmin && (
+              <div style={{ marginTop: 10 }}>
+                {!quiz.isActive && (
+                  <button className="btn btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', marginRight: 8 }} onClick={() => handleAdminStart(quiz._id)}>Start Live (Admin)</button>
+                )}
+                {quiz.isActive && (
+                  <button className="btn btn-danger" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', marginRight: 8 }} onClick={() => handleAdminEndLive(quiz._id)}>End Live</button>
+                )}
+                {quiz.isActive && (quiz.roomCode || liveRoomCodes[quiz._id]) && (
+                  <div style={{ marginTop: 8, background: '#e3f2fd', borderRadius: 8, padding: 8, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontWeight: 600, color: '#1976d2' }}>Oda Kodu: {quiz.roomCode || liveRoomCodes[quiz._id]}</span>
+                    <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }} onClick={() => {navigator.clipboard.writeText(quiz.roomCode || liveRoomCodes[quiz._id]);}}>Kopyala</button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         ))}

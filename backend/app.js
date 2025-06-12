@@ -180,10 +180,24 @@ io.on('connection', (socket) => {
         const scoresArr = Object.entries(state.scores).map(([userId, data]) => ({ userId, username: data.username, score: data.score }));
         // Her kullanıcı için quizHistory'ye ekle
         scoresArr.forEach(async ({ userId, score }) => {
-          const user = await User.findOne({ username: state.scores[userId]?.username });
+          // userId artık socket.id değil, frontend'den userId gönderilmeli veya username ile birlikte localStorage'dan alınmalı
+          // Daha güvenli olması için username yerine userId ile bulmaya çalış
+          let user = null;
+          if (userId && userId.length === 24) {
+            // Muhtemelen bir ObjectId (userId)
+            user = await User.findById(userId);
+          }
+          if (!user) {
+            // Fallback: username ile bul
+            user = await User.findOne({ username: state.scores[userId]?.username });
+          }
           if (user) {
-            user.quizHistory.push({ quizId, score, date: new Date(), mode: 'canli' });
-            await user.save();
+            // Aynı quiz ve mode için tekrar kayıt eklenmesin
+            const already = user.quizHistory.find(q => q.quizId.toString() === quizId.toString() && q.mode === 'canli');
+            if (!already) {
+              user.quizHistory.push({ quizId, score, date: new Date(), mode: 'canli' });
+              await user.save();
+            }
           }
         });
         io.to(roomCode).emit('quizEnd', { scores: scoresArr });
@@ -220,10 +234,24 @@ io.on('connection', (socket) => {
         const scoresArr = Object.entries(state.scores).map(([userId, data]) => ({ userId, username: data.username, score: data.score }));
         // Her kullanıcı için quizHistory'ye ekle
         scoresArr.forEach(async ({ userId, score }) => {
-          const user = await User.findOne({ username: state.scores[userId]?.username });
+          // userId artık socket.id değil, frontend'den userId gönderilmeli veya username ile birlikte localStorage'dan alınmalı
+          // Daha güvenli olması için username yerine userId ile bulmaya çalış
+          let user = null;
+          if (userId && userId.length === 24) {
+            // Muhtemelen bir ObjectId (userId)
+            user = await User.findById(userId);
+          }
+          if (!user) {
+            // Fallback: username ile bul
+            user = await User.findOne({ username: state.scores[userId]?.username });
+          }
           if (user) {
-            user.quizHistory.push({ quizId, score, date: new Date(), mode: 'canli' });
-            await user.save();
+            // Aynı quiz ve mode için tekrar kayıt eklenmesin
+            const already = user.quizHistory.find(q => q.quizId.toString() === quizId.toString() && q.mode === 'canli');
+            if (!already) {
+              user.quizHistory.push({ quizId, score, date: new Date(), mode: 'canli' });
+              await user.save();
+            }
           }
         });
         io.to(roomCode).emit('quizEnd', { scores: scoresArr });

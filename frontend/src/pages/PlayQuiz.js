@@ -5,6 +5,9 @@ import { getQuizById } from '../services/api';
 import QuestionTimer from './QuestionTimer';
 import { saveQuizHistory } from '../services/api';
 
+// Arka plan müziği için basit bir mp3 dosyası (public klasörüne eklenmeli)
+const MUSIC_URL = process.env.PUBLIC_URL + '/quiz-music.mp3';
+
 function PlayQuiz() {
   // URL'den quiz id'sini al
   const { id } = useParams();
@@ -19,6 +22,10 @@ function PlayQuiz() {
 
   // Cevapları ve doğru sayısını takip etmek için bir dizi ekleyelim
   const [answers, setAnswers] = useState([]);
+
+  // Arka plan müziği için ref ve state
+  const audioRef = useRef(null);
+  const [musicPlaying, setMusicPlaying] = useState(true);
 
   // Sayfa yüklendiğinde quiz detayını backend'den çek
   useEffect(() => {
@@ -47,6 +54,17 @@ function PlayQuiz() {
       setShowTimer(true);
     }, 1000);
   };
+
+  // Quiz başladığında müziği başlat
+  useEffect(() => {
+    if (audioRef.current && musicPlaying) {
+      audioRef.current.volume = 0.25;
+      audioRef.current.play().catch(() => {});
+    }
+    return () => {
+      if (audioRef.current) audioRef.current.pause();
+    };
+  }, [musicPlaying]);
 
   // Quiz bitiminde geçmişi kaydet (koşul dışında, hook kuralına uygun)
   useEffect(() => {
@@ -79,10 +97,12 @@ function PlayQuiz() {
   // Tüm sorular bittiğinde quiz bitti mesajı ve yönlendirme butonları göster
   if (currentQ >= quiz.questions.length) return (
     <div style={{ padding: 32 }}>
+      <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
       <h2>Quiz bitti!</h2>
       <div>Doğru sayınız: {correctCountRef.current} / {quiz.questions.length}</div>
       <button onClick={() => navigate('/')}>Ana Sayfa</button>
       <button style={{ marginLeft: 8 }} onClick={() => navigate('/profile')}>Profilim / Geçmişim</button>
+      <button style={{ marginLeft: 16 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
     </div>
   );
 
@@ -91,7 +111,9 @@ function PlayQuiz() {
 
   return (
     <div style={{ padding: 32 }}>
+      <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
       <h2>{quiz.title}</h2>
+      <button style={{ marginBottom: 12 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
       <div style={{ marginBottom: 16 }}>
         <b>{q.text}</b>
         <ul>

@@ -1,7 +1,6 @@
 // Kullanıcıya ait profil ve quiz geçmişi sayfası
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ListIcon from '@mui/icons-material/List';
 import HistoryIcon from '@mui/icons-material/History';
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
@@ -77,9 +76,9 @@ function Profile() {
           <ul className="sidebar-menu">
             {sections.map(sec => (
               <li key={sec.key}>
-                <a href="#" className={activeSection === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setActiveSection(sec.key); }}>
+                <button className={activeSection === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setActiveSection(sec.key); }} style={{ background: 'none', border: 'none', color: 'white', padding: 0, fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {sec.icon} {sec.label}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
