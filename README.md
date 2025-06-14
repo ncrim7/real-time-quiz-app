@@ -3,7 +3,7 @@
 Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, quiz oluşturabilir, canlı quiz oturumlarına PIN ile katılabilir ve skor tablosu görebilir. Modern admin paneli, kullanıcı profili, gelişmiş dashboard ve yönetim özellikleriyle birlikte gelir.
 
 ## Teknolojiler
-- **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Socket.io
+- **Backend:** Node.js, Express.js, MongoDB,JWT, Socket.io
 - **Frontend:** React, MUI (Material UI), modern CSS, responsive tasarım
 
 ## Temel Özellikler
