@@ -1,3 +1,4 @@
+➤ Tanıtım Videosu : [`Video`](https://www.youtube.com/watch?v=yzVxxUGjL58)
 # 🎯 Real-Time Quiz App
 
 Gelişmiş, gerçek zamanlı çok oyunculu quiz platformu. Kullanıcılar kayıt olup giriş yapabilir, quiz oluşturabilir, canlı quiz oturumlarına PIN ile katılabilir ve skor tablosu görebilir. Modern admin paneli, kullanıcı profili, gelişmiş dashboard ve yönetim özellikleriyle birlikte gelir.
