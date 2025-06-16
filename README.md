@@ -255,7 +255,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosy
 ## 👨‍💻 Geliştiriciler
 
 - **GitHub**: [@ncrim7](https://github.com/ncrim7)
-- **GitHub**: [@ncrim7](https://github.com/erdembaltaci)
+- **GitHub**: [@erdembaltaci](https://github.com/erdembaltaci)
 
 ## 📞 İletişim
 
