@@ -11,10 +11,10 @@
 - **Çok oyunculu canlı quiz:** PIN ile katılım, lobby (bekleme odası), zamanlayıcı, eşzamanlı soru akışı, skor tablosu, quiz geçmişi ve kullanıcı profili
 - **Gerçek zamanlı otomasyon:** Her oyuncu kendi cevabını verebilir, tüm oyuncular cevap verince veya süre dolunca otomatik olarak yeni soruya geçilir
 - **Bağlantı ve edge-case yönetimi:** Bağlantı kopması, yeniden katılım gibi durumlar için temel altyapı
-
 - **Admin paneli:** Kullanıcı, quiz ve analytics yönetimi, canlı quiz başlatma/sonlandırma, quiz düzenleme/silme, sadece admin rolü için erişim
 - **Canlı quiz bekleme odasında quiz sonlandırma:** Sadece quiz sahibi/admin için
 - **Arka plan müziği:** Canlı ve tekil quizlerde frontend ile entegre şekilde desteklenir
+
 ## Kurulum
 1. Gerekli paketleri yükleyin:
    ```powershell
@@ -85,3 +85,5 @@
 - Modern admin paneli ve canlı quiz yönetimi için backend kodunu inceleyiniz
 - Admin, tüm quizleri canlı başlatabilir, oda kodunu görebilir ve oturumu sonlandırabilir
 - Proje production-ready mimariye sahiptir, yeni özellikler için modüler yapı korunmalıdır
+
+---
