@@ -21,7 +21,7 @@ function QuizList() {
 
   // Sayfa yüklendiğinde quizleri backend'den çek
   useEffect(() => {
-    axios.get('http://localhost:5000/api/quiz')
+    axios.get('${import.meta.env.BACKEND_URL}/api/quiz')
       .then(res => setQuizzes(res.data)) // Başarılıysa quizleri state'e yaz
       .catch(() => setQuizzes([])); // Hata olursa boş dizi
   }, []);
@@ -85,7 +85,7 @@ function QuizList() {
   // Quiz başlatma fonksiyonu
   const handleStart = async (quizId) => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/quiz/${quizId}/start`);
+      const res = await axios.post(`${import.meta.env.BACKEND_URL}/api/quiz/${quizId}/start`);
       const roomCode = res.data.roomCode;
       navigate('/lobby', { state: { roomCode, isOwner: true } });
     } catch {

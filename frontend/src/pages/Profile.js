@@ -24,7 +24,7 @@ function Profile() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://localhost:5000/api/user/me', {
+      axios.get('${import.meta.env.BACKEND_URL}/api/user/me', {
         headers: { Authorization: 'Bearer ' + token }
       }).then(res => {
         setUser(res.data);
@@ -37,7 +37,7 @@ function Profile() {
     async function fetchTitles() {
       const missing = quizHistory.filter(q => q.quizId && !quizTitles[q.quizId]);
       const promises = missing.map(q =>
-        axios.get(`http://localhost:5000/api/quiz/${q.quizId}`)
+        axios.get(`${import.meta.env.BACKEND_URL}/api/quiz/${q.quizId}`)
           .then(res => ({ id: q.quizId, title: res.data.title }))
           .catch(() => ({ id: q.quizId, title: 'Quiz bulunamadı' }))
       );

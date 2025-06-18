@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Backend API ana adresi
-const API_URL = 'http://localhost:5000/api';
+const API_URL = '${import.meta.env.BACKEND_URL}/api';
 
 // Kullanıcı kaydı (register)
 // username, email ve password ile yeni kullanıcı oluşturur
