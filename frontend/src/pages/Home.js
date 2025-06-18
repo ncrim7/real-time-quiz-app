@@ -9,29 +9,24 @@ import InsightsIcon from '@mui/icons-material/Insights';
 
 function Home() {
   const navigate = useNavigate();
-  // Kullanıcı bilgisini ve quiz geçmişini tutan state'ler
-  const [user, setUser] = useState(null); // Giriş yapan kullanıcı bilgisi
-  const [quizHistory, setQuizHistory] = useState([]); // Kullanıcının quiz geçmişi
-  const [quizTitles, setQuizTitles] = useState({}); // QuizId -> Başlık eşlemesi
+  const [user, setUser] = useState(null);
+  const [quizHistory, setQuizHistory] = useState([]);
+  const [quizTitles, setQuizTitles] = useState({});
 
-  // Sayfa yüklendiğinde kullanıcı giriş yapmışsa profil ve quiz geçmişini çek
   useEffect(() => {
-    const token = localStorage.getItem('token'); // JWT token localStorage'dan alınır
+    const token = localStorage.getItem('token');
     if (token) {
-      // Backend'den kullanıcı profilini ve quiz geçmişini çek
       axios.get('http://localhost:5000/api/user/me', {
         headers: { Authorization: 'Bearer ' + token }
       }).then(res => {
-        setUser(res.data); // Kullanıcı bilgisi state'e yazılır
-        setQuizHistory(res.data.quizHistory || []); // Quiz geçmişi state'e yazılır
+        setUser(res.data);
+        setQuizHistory(res.data.quizHistory || []);
       });
     }
   }, []);
 
-  // Quiz geçmişi değiştiğinde, başlıkları topluca çek
   useEffect(() => {
     async function fetchTitles() {
-      // Sadece yeni başlıkları çek
       const missing = quizHistory.filter(q => q.quizId && !quizTitles[q.quizId]);
       const promises = missing.map(q =>
         axios.get(`http://localhost:5000/api/quiz/${q.quizId}`)
@@ -52,22 +47,17 @@ function Home() {
   }, [quizHistory]);
 
   return (
-    <div style={{
-      minHeight: 'calc(100vh - 80px)',
-      background: 'linear-gradient(120deg, #6a11cb 0%, #2575fc 100%)',
-      padding: '0',
-      margin: 0
-    }}>
+    <div className="animated-bg">
       <div className="hero" style={{ textAlign: 'center', padding: '64px 16px 32px 16px', color: '#fff' }}>
-        <h1 style={{ fontSize: 48, fontWeight: 800, marginBottom: 16 }}>QuizMaster'a Hoş Geldiniz</h1>
-        <p style={{ fontSize: 22, opacity: 0.95, marginBottom: 32 }}>
+        <h1 className="hero-title">QuizMaster'a Hoş Geldiniz</h1>
+        <p className="hero-desc">
           Gerçek zamanlı quizler oluştur, katıl ve arkadaşlarınla yarış! Anında skor, canlı liderlik tablosu ve eğlenceli deneyim.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 40 }}>
-          <button className="btn" style={{ fontSize: 20, display: 'flex', alignItems: 'center', gap: 8 }} onClick={() => navigate('/quiz-create')}>
+          <button className="home-btn home-btn-primary" onClick={() => navigate('/quiz-create')}>
             <AddCircleIcon /> Quiz Oluştur
           </button>
-          <button className="btn" style={{ fontSize: 20, display: 'flex', alignItems: 'center', gap: 8, background: 'linear-gradient(90deg, #ff6b6b 0%, #ffd93d 100%)', color: '#222', fontWeight: 700 }} onClick={() => navigate('/quiz-list')}>
+          <button className="home-btn home-btn-secondary" onClick={() => navigate('/quiz-list')}>
             <PlayArrowIcon /> Quiz Katıl
           </button>
         </div>
@@ -97,12 +87,12 @@ function Home() {
           {quizHistory.length === 0 && <div>Henüz quiz geçmişiniz yok.</div>}
           {/* Quiz geçmişi varsa listele */}
           {quizHistory.length > 0 && (
-            <ol>
+            <ol className="quiz-history-list">
               {quizHistory.slice().reverse().map((q, i) => (
-                <li key={i}>
-                  <b>{quizTitles[q.quizId] || '...'}</b><br />
-                  Skor: {q.score} <br />
-                  Tarih: {new Date(q.date).toLocaleString('tr-TR')}
+                <li className="quiz-history-item" key={i}>
+                  <span className="score">{q.score}</span>
+                  <span><b>{quizTitles[q.quizId] || '...'}</b></span>
+                  <span className="date">{new Date(q.date).toLocaleString('tr-TR')}</span>
                 </li>
               ))}
             </ol>

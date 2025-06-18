@@ -365,6 +365,129 @@ ol, ul {
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* Animasyonlu gradient arka plan */
+.animated-bg {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(120deg, #6a11cb 0%, #2575fc 100%);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease-in-out infinite;
+  padding: 0;
+  margin: 0;
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ffd93d 10%, #6a11cb 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-desc {
+  font-size: 1.4rem;
+  opacity: 0.97;
+  margin-bottom: 32px;
+  color: #fff;
+  text-shadow: 0 2px 8px #0002;
+}
+
+.home-btn {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 24px #0002;
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+}
+.home-btn-primary {
+  background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+  color: #fff;
+}
+.home-btn-primary:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
+  box-shadow: 0 8px 32px #6a11cb33;
+}
+.home-btn-secondary {
+  background: linear-gradient(90deg, #ff6b6b 0%, #ffd93d 100%);
+  color: #222;
+}
+.home-btn-secondary:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: linear-gradient(90deg, #ffd93d 0%, #ff6b6b 100%);
+  box-shadow: 0 8px 32px #ffd93d33;
+}
+
+.feature-card {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  z-index: 1;
+}
+.feature-card:hover {
+  box-shadow: 0 8px 32px #6a11cb22;
+  transform: translateY(-6px) scale(1.03);
+}
+.feature-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: linear-gradient(120deg, #6a11cb11 0%, #ffd93d11 100%);
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.quiz-history-list {
+  margin-top: 18px;
+  padding-left: 0;
+  list-style: none;
+}
+.quiz-history-item {
+  background: #f7f8fa;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 1.08rem;
+  animation: fadeInUp 0.7s cubic-bezier(.39,.575,.56,1) both;
+}
+.quiz-history-item .score {
+  background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 700;
+  margin-right: 8px;
+  font-size: 1.05rem;
+}
+.quiz-history-item .date {
+  color: #888;
+  font-size: 0.98rem;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.quiz-history-item .date::before {
+  content: '\1F4C5'; /* Takvim ikonu */
+  font-size: 1.1em;
+  margin-right: 2px;
+}
+
 @media (max-width: 600px) {
   .card, .quiz-card {
     padding: 16px;
@@ -387,4 +510,9 @@ ol, ul {
   .quiz-grid {
     grid-template-columns: 1fr;
   }
+}
+@media (max-width: 700px) {
+  .hero-title { font-size: 2.1rem; }
+  .hero-desc { font-size: 1.1rem; }
+  .features { flex-direction: column; gap: 0 !important; }
 }

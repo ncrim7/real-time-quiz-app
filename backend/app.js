@@ -28,7 +28,13 @@ const io = new Server(httpServer, {
 });
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors(
+  {
+    origin: ["https://kahoot-clone-frontend.vercel.app", "http://localhost:3000"], // İzin verilen frontend URL'leri
+    methods: ["GET", "POST"], // İzin verilen HTTP metodları
+    credentials: true // Çerezler ve kimlik doğrulama bilgileri gönderilsin
+  }
+));
 app.use(bodyParser.json());
 
 // API route'ları

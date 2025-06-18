@@ -193,7 +193,7 @@ function LiveQuiz() {
                 style={{
                   opacity: answer && answer !== opt ? 0.5 : 1,
                   cursor: answer ? 'not-allowed' : 'pointer',
-                  background: answer === opt ? '#d1e7dd' : undefined
+                  background: answer === opt ? '#050505' : undefined
                 }}
               >
                 {opt}
