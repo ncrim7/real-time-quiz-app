@@ -65,7 +65,7 @@ real-time-quiz-app/
 │   ├── middleware/            # Middleware fonksiyonları
 │   ├── socket/                # Socket.io event yönetimi
 │   ├── config/                # Veritabanı ve konfigürasyon
-│   └── server.js              # Ana server dosyası
+│   └── app.js              # Ana server dosyası
 │
 ├── frontend/                   # React frontend uygulaması
 │   ├── src/
