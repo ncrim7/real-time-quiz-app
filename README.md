@@ -156,6 +156,9 @@ Uygulama `http://localhost:3000` adresinde çalışacaktır.
 3. Kullanıcıları, quiz'leri ve analytics'i yönetin
 4. Canlı quiz oturumlarını kontrol edin
 
+### Admin Kimlik Bilgileri
+ - `Email: admin@gmail.com` - Mail bilgisi
+ - `Şifre: admin` - Şifre bilgisi
 ## 🔧 API Endpoints
 
 ### Authentication
