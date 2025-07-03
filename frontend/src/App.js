@@ -13,6 +13,7 @@ import Lobby from './pages/Lobby';
 import AdminPanel from './pages/AdminPanel';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/lobby" element={<ProtectedRoute><Lobby /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );
