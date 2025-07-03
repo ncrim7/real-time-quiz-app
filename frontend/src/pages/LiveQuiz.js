@@ -18,7 +18,6 @@ function LiveQuiz() {
   const [username, setUsername] = useState(""); // Kullanıcı adı
   const [joined, setJoined] = useState(false); // Odaya katılım durumu
   const [quiz, setQuiz] = useState(null); // Quiz objesi
-  const [currentQ, setCurrentQ] = useState(0); // Şu anki soru indeksi
   const [question, setQuestion] = useState(null); // Şu anki soru
   const [answer, setAnswer] = useState(''); // Kullanıcının cevabı
   const [showTimer, setShowTimer] = useState(false); // Zamanlayıcı gösterilsin mi
@@ -37,7 +36,7 @@ function LiveQuiz() {
   useEffect(() => {
     // Yeni soru geldiğinde state güncellenir
     socket.on('question', ({ index, question }) => {
-      setCurrentQ(index);
+      // setCurrentQ(index); // KULLANILMIYOR, YORUMA ALINDI
       setQuestion(question);
       setAnswer('');
       setShowTimer(true);
@@ -97,12 +96,11 @@ function LiveQuiz() {
       socket.off('autoNextQuestion');
       socket.off('lobbyEnd');
     };
-  }, [roomCode]);
+  }, [roomCode, historySaved, quiz, username]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Odaya katılma fonksiyonu (artık sadece lobbyEnd sonrası kullanılacak)
+  // Odaya katılma fonksiyonu
   const joinRoom = async () => {
     if (roomCode && username) {
-      // Sadece lobbyEnd ile başlatılacak, burada getQuestion tetiklenmeyecek
       setJoined(true);
       setQuizEnd(false);
       socket.emit('joinRoom', { roomCode, username });
@@ -148,11 +146,15 @@ function LiveQuiz() {
   // Odaya katılım yoksa katılım formunu göster
   if (!joined) {
     return (
-      <div className="card" style={{ padding: 32 }}>
-        <h2>Canlı Quiz Odası</h2>
-        <input placeholder="Oda Kodu" value={roomCode} onChange={e => setRoomCode(e.target.value)} />
-        <input placeholder="Kullanıcı Adı" value={username} onChange={e => setUsername(e.target.value)} style={{ marginLeft: 8 }} />
-        <button onClick={joinRoom}>Odaya Katıl</button>
+      <div className="card live-quiz-join" style={{ padding: 40, maxWidth: 420, margin: '48px auto', borderRadius: 18, background: 'rgba(255,255,255,0.95)', boxShadow: '0 4px 24px #6366f122', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
+        <h2 style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '2rem', marginBottom: 18, letterSpacing: '-1px' }}>Canlı Quiz Odası</h2>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <label style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Oda Kodu</label>
+          <input className="input-flat" placeholder="Oda Kodu" value={roomCode} onChange={e => setRoomCode(e.target.value)} style={{ fontSize: 17, padding: '0.9rem 1.1rem', borderRadius: 11, border: '1.5px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', fontWeight: 600, outline: 'none', boxShadow: '0 2px 8px #6366f111', transition: 'border 0.18s, box-shadow 0.18s' }} />
+          <label style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: 15, marginBottom: 4, marginTop: 8 }}>Kullanıcı Adı</label>
+          <input className="input-flat" placeholder="Kullanıcı Adı" value={username} onChange={e => setUsername(e.target.value)} style={{ fontSize: 17, padding: '0.9rem 1.1rem', borderRadius: 11, border: '1.5px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', fontWeight: 600, outline: 'none', boxShadow: '0 2px 8px #6366f111', transition: 'border 0.18s, box-shadow 0.18s' }} />
+        </div>
+        <button className="btn btn-primary" style={{ width: '100%', fontSize: 18, padding: '1rem 0', borderRadius: 13, marginTop: 18, fontWeight: 700, letterSpacing: 0.2, textAlign: 'center', justifyContent: 'center', display: 'flex', alignItems: 'center' }} onClick={joinRoom}>Odaya Katıl</button>
       </div>
     );
   }
@@ -178,22 +180,33 @@ function LiveQuiz() {
 
   // Quiz sırasında soru ve seçenekleri, zamanlayıcı ve skor tablosu göster
   return (
-    <div className="quiz-card" style={{ padding: 32 }}>
+    <div style={{ padding: 32, maxWidth: 520, margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 18, boxShadow: '0 4px 24px #6366f122', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
-      <h2>{quiz?.title || 'Canlı Quiz'}</h2>
-      <button style={{ marginBottom: 12 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
-      <div style={{ marginBottom: 16 }}>
-        <b>{question.text}</b>
-        <ul>
+      <h2 style={{fontWeight:800, color:'var(--primary)', fontSize:'2rem', marginBottom:8, textAlign:'center'}}>{quiz?.title || 'Canlı Quiz'}</h2>
+      <button className="btn btn-primary" style={{ marginBottom: 18, fontSize:16, borderRadius:10, padding:'0.6rem 1.5rem' }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
+      <div style={{ marginBottom: 20, width:'100%' }}>
+        <b style={{fontSize:20, display:'block', textAlign:'center', marginBottom:18}}>{question.text}</b>
+        <ul style={{listStyle:'none', padding:0, margin:0, display:'flex', flexDirection:'column', gap:14, alignItems:'center'}}>
           {question.options.map((opt, i) => (
-            <li key={i} style={{ marginBottom: 8 }}>
+            <li key={i} style={{width:'100%'}}>
               <button
+                className="btn btn-secondary"
                 disabled={!!answer}
                 onClick={() => sendAnswer(opt)}
                 style={{
+                  width:'100%',
+                  maxWidth:340,
+                  fontSize:17,
+                  padding:'0.8rem 1.2rem',
+                  borderRadius:12,
+                  margin:'0 auto',
                   opacity: answer && answer !== opt ? 0.5 : 1,
                   cursor: answer ? 'not-allowed' : 'pointer',
-                  background: answer === opt ? '#050505' : undefined
+                  background: answer === opt ? 'linear-gradient(90deg,#10b981 60%,#6366f1 100%)' : undefined,
+                  color: answer === opt ? '#fff' : undefined,
+                  fontWeight:600,
+                  boxShadow: answer === opt ? '0 4px 16px #10b98133' : '0 2px 8px #6366f122',
+                  transition:'all 0.18s'
                 }}
               >
                 {opt}
@@ -202,11 +215,11 @@ function LiveQuiz() {
           ))}
         </ul>
         {/* Soru için zamanlayıcı */}
-        {showTimer && <QuestionTimer duration={10} onTimeout={handleTimeout} />}
+        {showTimer && <div style={{marginTop:18, textAlign:'center'}}><QuestionTimer duration={10} onTimeout={handleTimeout} /></div>}
         {/* Kullanıcı cevabı */}
-        {answer && <div className="success">Cevabınız: {answer}</div>}
+        {answer && <div style={{ color: '#10b981', fontWeight:700, marginTop:12, textAlign:'center' }}>Cevabınız: {answer}</div>}
         {/* Diğer oyuncuları bekleme mesajı */}
-        {waitingOthers && <div style={{ color: '#888', marginTop: 12 }}>Diğer oyuncular bekleniyor...</div>}
+        {waitingOthers && <div style={{ color: '#888', marginTop: 12, textAlign:'center' }}>Diğer oyuncular bekleniyor...</div>}
       </div>
       {/* Skor tablosu */}
       <Leaderboard roomId={roomCode} scores={scores} />

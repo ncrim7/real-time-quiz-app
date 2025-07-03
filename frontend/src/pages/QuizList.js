@@ -137,38 +137,40 @@ function QuizList() {
         </h2>
         {/* Her quiz için kart görünümü */}
         {quizzes.map(quiz => (
-          <div className="quiz-card" key={quiz._id} style={{ background: '#f7f8fa', borderRadius: 12, boxShadow: '0 2px 8px #0001', padding: 20, marginBottom: 18 }}>
-            <h3 style={{ marginBottom: 8, color: '#2575fc' }}>{quiz.title}</h3>
-            <div style={{ color: '#888', marginBottom: 8 }}>{quiz.description}</div>
-            <div style={{ fontSize: 14, color: '#aaa', marginBottom: 8 }}>Oluşturan: {quiz.createdBy?.email || 'Bilinmiyor'}</div>
-            <button onClick={() => navigate(`/play-quiz/${quiz._id}`)} style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, cursor: 'pointer', marginRight: 8 }}>
-              <QuizIcon style={{ marginRight: 4, fontSize: 18 }} /> Quiz Oyna
-            </button>
-            {/* Eğer quiz kullanıcınınsa düzenle, sil ve başlat butonları göster */}
-            {quiz.createdBy?.email === userEmail && (
-              <>
-                <button style={{ background: 'var(--secondary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 14px', fontWeight: 600, marginLeft: 8, cursor: 'pointer' }} onClick={() => handleEdit(quiz)}>Düzenle</button>
-                <button style={{ background: 'var(--danger)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 14px', fontWeight: 600, marginLeft: 8, cursor: 'pointer' }} onClick={() => handleDelete(quiz._id)}>Sil</button>
-                <button style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 14px', fontWeight: 600, marginLeft: 8, cursor: 'pointer' }} onClick={() => handleStart(quiz._id)}>Başlat (Canlı)</button>
-              </>
-            )}
-            {/* Admin için canlı başlat, bitir ve oda kodu gösterimi */}
-            {isAdmin && (
-              <div style={{ marginTop: 10 }}>
-                {!quiz.isActive && (
-                  <button className="btn btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', marginRight: 8 }} onClick={() => handleAdminStart(quiz._id)}>Start Live (Admin)</button>
-                )}
-                {quiz.isActive && (
-                  <button className="btn btn-danger" style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', marginRight: 8 }} onClick={() => handleAdminEndLive(quiz._id)}>End Live</button>
-                )}
-                {quiz.isActive && (quiz.roomCode || liveRoomCodes[quiz._id]) && (
-                  <div style={{ marginTop: 8, background: '#e3f2fd', borderRadius: 8, padding: 8, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontWeight: 600, color: '#1976d2' }}>Oda Kodu: {quiz.roomCode || liveRoomCodes[quiz._id]}</span>
-                    <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }} onClick={() => {navigator.clipboard.writeText(quiz.roomCode || liveRoomCodes[quiz._id]);}}>Kopyala</button>
-                  </div>
-                )}
-              </div>
-            )}
+          <div className="quiz-card" key={quiz._id} style={{ background: '#f7f8fa', borderRadius: 12, boxShadow: '0 2px 8px #0001', padding: 20, marginBottom: 18, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <h3 style={{ marginBottom: 8, color: '#2575fc', fontWeight: 800, fontSize: 22, letterSpacing: '-0.5px' }}>{quiz.title}</h3>
+            <div style={{ color: '#888', marginBottom: 8, fontSize: 16, fontWeight: 500 }}>{quiz.description}</div>
+            <div style={{ fontSize: 15, color: '#aaa', marginBottom: 12, fontWeight: 600 }}>Oluşturan: {quiz.createdBy?.email || 'Bilinmiyor'}</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 4 }}>
+              <button onClick={() => navigate(`/play-quiz/${quiz._id}`)} style={{ background: 'linear-gradient(90deg, #6366f1 60%, #10b981 100%)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 24px', fontWeight: 700, fontSize: 16, letterSpacing: 0.2, boxShadow: '0 2px 8px #6366f122', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
+                <QuizIcon style={{ marginRight: 4, fontSize: 20 }} /> Quiz Oyna
+              </button>
+              {/* Eğer quiz kullanıcınınsa düzenle, sil ve başlat butonları göster */}
+              {quiz.createdBy?.email === userEmail && (
+                <>
+                  <button style={{ background: 'var(--secondary)', color: 'var(--primary)', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 15, marginLeft: 0, boxShadow: '0 2px 8px #6366f111', cursor: 'pointer', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }} onClick={() => handleEdit(quiz)} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>Düzenle</button>
+                  <button style={{ background: 'var(--danger)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 15, marginLeft: 0, boxShadow: '0 2px 8px #6366f111', cursor: 'pointer', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }} onClick={() => handleDelete(quiz._id)} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>Sil</button>
+                  <button style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 18px', fontWeight: 700, fontSize: 15, marginLeft: 0, boxShadow: '0 2px 8px #6366f111', cursor: 'pointer', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }} onClick={() => handleStart(quiz._id)} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>Başlat (Canlı)</button>
+                </>
+              )}
+              {/* Admin için canlı başlat, bitir ve oda kodu gösterimi */}
+              {isAdmin && (
+                <>
+                  {!quiz.isActive && (
+                    <button className="btn btn-primary" style={{ fontSize: 15, fontWeight: 700, padding: '10px 18px', borderRadius: 10, marginRight: 0, boxShadow: '0 2px 8px #6366f122', display: 'inline-flex', alignItems: 'center', gap: 6, letterSpacing: 0.2, background: 'linear-gradient(90deg, #6366f1 60%, #10b981 100%)', color: '#fff', border: 'none', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }} onClick={() => handleAdminStart(quiz._id)} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>Start Live (Admin)</button>
+                  )}
+                  {quiz.isActive && (
+                    <button className="btn btn-danger" style={{ fontSize: 15, fontWeight: 700, padding: '10px 18px', borderRadius: 10, marginRight: 0, boxShadow: '0 2px 8px #6366f122', display: 'inline-flex', alignItems: 'center', gap: 6, letterSpacing: 0.2, background: 'var(--danger)', color: '#fff', border: 'none', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }} onClick={() => handleAdminEndLive(quiz._id)} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>End Live</button>
+                  )}
+                  {quiz.isActive && (quiz.roomCode || liveRoomCodes[quiz._id]) && (
+                    <div style={{ marginTop: 8, background: '#e3f2fd', borderRadius: 8, padding: 8, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ fontWeight: 600, color: '#1976d2' }}>Oda Kodu: {quiz.roomCode || liveRoomCodes[quiz._id]}</span>
+                      <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }} onClick={() => {navigator.clipboard.writeText(quiz.roomCode || liveRoomCodes[quiz._id]);}}>Kopyala</button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         ))}
         {/* Quiz düzenleme modalı */}

@@ -97,9 +97,26 @@ function QuizCreate() {
               </div>
             </div>
           ))}
-          <button type="button" onClick={addQuestion} style={{ background: 'var(--secondary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, marginRight: 8 }}>
-            <AddCircleIcon style={{ marginRight: 4, fontSize: 18 }} /> Soru Ekle
-          </button>
+          <button type="button" onClick={addQuestion} style={{
+  background: 'linear-gradient(90deg, #6366f1 60%, #10b981 100%)',
+  color: '#fff',
+  border: 'none',
+  borderRadius: 12,
+  padding: '12px 28px',
+  fontWeight: 700,
+  fontSize: 17,
+  marginRight: 12,
+  marginBottom: 18,
+  boxShadow: '0 4px 16px #6366f122',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  letterSpacing: 0.2,
+  cursor: 'pointer',
+  transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s',
+}} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
+  <AddCircleIcon style={{ marginRight: 6, fontSize: 22 }} /> Soru Ekle
+</button>
           <button type="submit" style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600 }}>Quiz Oluştur</button>
         </form>
       </div>

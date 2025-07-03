@@ -54,7 +54,7 @@ function Register() {
             <label>Şifre:</label><br />
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{ width: '100%', borderRadius: 8, border: '1px solid #ddd', padding: 8, marginBottom: 10 }} />
           </div>
-          <button type="submit" style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, width: '100%', marginTop: 10 }}>
+          <button type="submit" className="auth-btn">
             <PersonAddIcon style={{ marginRight: 4, fontSize: 18 }} /> Kayıt Ol
           </button>
         </form>

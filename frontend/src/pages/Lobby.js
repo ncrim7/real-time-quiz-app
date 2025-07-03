@@ -80,11 +80,13 @@ function Lobby() {
   if (!joined) {
     // Katılımcı için PIN ve kullanıcı adı girişi
     return (
-      <div className="card" style={{ padding: 32 }}>
-        <h2>Oyun PIN'i ile Katıl</h2>
-        <input placeholder="Oyun PIN" value={roomCode} onChange={e => setRoomCode(e.target.value.toUpperCase())} />
-        <input placeholder="Kullanıcı Adı" value={username} onChange={e => setUsername(e.target.value)} style={{ marginLeft: 8 }} />
-        <button onClick={handleJoin}>Odaya Katıl</button>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%)' }}>
+        <div className="card lobby-card" style={{ padding: 40, minWidth: 340, maxWidth: 420, width: '100%', borderRadius: 18, background: 'rgba(255,255,255,0.97)', boxShadow: '0 4px 24px #6366f122', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+          <h2 style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '2rem', marginBottom: 10, letterSpacing: '-1px' }}>Oyun PIN'i ile Katıl</h2>
+          <input placeholder="Oyun PIN" value={roomCode} onChange={e => setRoomCode(e.target.value.toUpperCase())} />
+          <input placeholder="Kullanıcı Adı" value={username} onChange={e => setUsername(e.target.value)} style={{ marginLeft: 8 }} />
+          <button onClick={handleJoin}>Odaya Katıl</button>
+        </div>
       </div>
     );
   }
@@ -113,18 +115,20 @@ function Lobby() {
   };
 
   return (
-    <div className="card" style={{ padding: 32 }}>
-      <h2>Oyun Bekleme Odası</h2>
-      <div style={{ fontSize: 22, marginBottom: 16 }}>PIN: <b>{roomCode}</b></div>
-      <div>Katılımcı sayısı: {players}</div>
-      <div style={{ margin: '16px 0', fontSize: 18 }}>Oyun {seconds} saniye sonra başlayacak...</div>
-      <div style={{ color: '#888', fontSize: 14 }}>Arkadaşlarınıza PIN'i verin, onlar da katılsın!</div>
-      {/* Sadece quiz sahibi için quiz sonlandır butonu */}
-      {isOwner && (
-        <button onClick={handleEndQuiz} style={{ marginTop: 18, background: 'var(--danger)', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>
-          Quizi Sonlandır
-        </button>
-      )}
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%)' }}>
+      <div className="card lobby-card" style={{ padding: 40, minWidth: 340, maxWidth: 420, width: '100%', borderRadius: 18, background: 'rgba(255,255,255,0.97)', boxShadow: '0 4px 24px #6366f122', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+        <h2 style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '2rem', marginBottom: 10, letterSpacing: '-1px' }}>Oyun Bekleme Odası</h2>
+        <div style={{ fontSize: 22, marginBottom: 10, color: 'var(--primary-dark)' }}>PIN: <b>{roomCode}</b></div>
+        <div style={{ fontWeight: 600, color: 'var(--text)' }}>Katılımcı sayısı: <span style={{ color: 'var(--primary)' }}>{players}</span></div>
+        <div style={{ margin: '18px 0', fontSize: 18, color: 'var(--text-secondary)', fontWeight: 500 }}>Oyun <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{seconds}</span> saniye sonra başlayacak...</div>
+        <div style={{ color: '#888', fontSize: 14, marginBottom: 8 }}>Arkadaşlarınıza PIN'i verin, onlar da katılsın!</div>
+        {/* Sadece quiz sahibi için quiz sonlandır butonu */}
+        {isOwner && (
+          <button onClick={handleEndQuiz} style={{ marginTop: 18, background: 'var(--danger)', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontWeight: 700, fontSize: 16, cursor: 'pointer', boxShadow: '0 2px 8px #ef444422', transition: 'background 0.18s, box-shadow 0.18s, transform 0.13s' }}>
+            Quizi Sonlandır
+          </button>
+        )}
+      </div>
     </div>
   );
 }

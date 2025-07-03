@@ -61,43 +61,34 @@ function Profile() {
   const quizzesCreated = user.createdQuizzes ? user.createdQuizzes.length : 0;
   const avgScore = quizHistory.length > 0 ? Math.round(quizHistory.reduce((a, b) => a + (b.score || 0), 0) / quizHistory.length) : 0;
   const totalPoints = quizHistory.reduce((a, b) => a + (b.score || 0), 0);
-
-  // Son aktiviteler (son 3 quiz)
   const recent = quizHistory.slice(-3).reverse();
-
-  // Kullanıcı baş harfleri
   const initials = user.name ? user.name.split(' ').map(x => x[0]).join('').slice(0,2).toUpperCase() : (user.username||'')[0]?.toUpperCase();
 
   return (
     <div id="profile" className="page" style={{ minHeight: 'calc(100vh - 80px)', background: 'linear-gradient(120deg, #6a11cb 0%, #2575fc 100%)', padding: 0, margin: 0 }}>
-      <div className="dashboard">
-        <div className="sidebar">
-          <h3 style={{ color: 'white', marginBottom: '2rem' }}>Profil</h3>
-          <ul className="sidebar-menu">
+      <div className="dashboard" style={{ display: 'flex', maxWidth: 1200, margin: '0 auto', minHeight: '80vh', padding: '32px 0' }}>
+        <aside className="sidebar" style={{ width: 240, minWidth: 180, background: 'rgba(255,255,255,0.04)', borderRadius: 18, padding: '2.5rem 1.2rem 2rem 1.2rem', marginRight: 32, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', boxShadow: '0 2px 12px #6366f111', height: 'fit-content', position: 'sticky', top: 32 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
+            <div style={{ width: 70, height: 70, borderRadius: '50%', background: 'linear-gradient(45deg, #ff6b6b, #ffd93d)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'white', fontWeight: 700, marginBottom: 10 }}>{initials}</div>
+            <div style={{ color: 'white', fontWeight: 700, fontSize: 18, marginBottom: 2 }}>{user.name || user.username}</div>
+            <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, marginBottom: 2 }}>@{user.username}</div>
+            <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13 }}>Üyelik Tarihi: {new Date(user.createdAt).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}</div>
+          </div>
+          <ul className="sidebar-menu" style={{ width: '100%', listStyle: 'none', padding: 0, margin: 0 }}>
             {sections.map(sec => (
-              <li key={sec.key}>
-                <button className={activeSection === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setActiveSection(sec.key); }} style={{ background: 'none', border: 'none', color: 'white', padding: 0, fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <li key={sec.key} style={{ width: '100%', marginBottom: 6 }}>
+                <button className={activeSection === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setActiveSection(sec.key); }} style={{ background: activeSection === sec.key ? 'rgba(255,255,255,0.13)' : 'none', border: 'none', color: 'white', padding: '0.7rem 1rem', fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.7rem', borderRadius: 10, fontWeight: 600, cursor: 'pointer', transition: 'background 0.18s' }}>
                   {sec.icon} {sec.label}
                 </button>
               </li>
             ))}
           </ul>
-        </div>
-        <div className="dashboard-content">
+        </aside>
+        <main className="dashboard-content" style={{ flex: 1, minWidth: 0 }}>
           {/* Overview */}
           {activeSection === 'overview' && (
             <div className="profile-section">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '2rem' }}>
-                <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(45deg, #ff6b6b, #ffd93d)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'white', fontWeight: 700 }}>
-                  {initials}
-                </div>
-                <div>
-                  <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>{user.name || user.username}</h2>
-                  <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '0.5rem' }}>@{user.username}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.7)' }}>Üyelik Tarihi: {new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-                </div>
-              </div>
-              <div className="stats-grid">
+              <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
                 <div className="stat-card">
                   <div className="stat-number">{quizzesTaken}</div>
                   <div>Katılan Quizler</div>
@@ -139,14 +130,14 @@ function Profile() {
           {activeSection === 'quizzes' && (
             <div className="profile-section">
               <h2 style={{ color: 'white', marginBottom: '2rem' }}>Oluşturduğum Quizler</h2>
-              <div className="quiz-grid">
+              <div className="quiz-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
                 {(user.createdQuizzes && user.createdQuizzes.length > 0) ? user.createdQuizzes.map((quiz, idx) => (
-                  <div className="quiz-card" key={quiz._id || idx}>
-                    <div className="quiz-header">
-                      <h3>{quiz.title}</h3>
-                      <span className="quiz-status status-live">AKTİF</span>
+                  <div className="quiz-card" key={quiz._id || idx} style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 14, padding: '1.5rem', boxShadow: '0 2px 8px #6366f111' }}>
+                    <div className="quiz-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <h3 style={{ color: 'white', fontSize: 18 }}>{quiz.title}</h3>
+                      <span className="quiz-status status-live" style={{ color: '#10b981', fontWeight: 600, fontSize: 13 }}>AKTİF</span>
                     </div>
-                    <p>{quiz.description}</p>
+                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15 }}>{quiz.description}</p>
                     <div style={{ marginTop: '1rem', fontSize: '0.9rem', opacity: 0.8 }}>
                       <span style={{ marginRight: 16 }}><i className="fas fa-users"></i> {quiz.participants || 0} katılımcı</span>
                       <span><i className="fas fa-eye" style={{ marginLeft: 8 }}></i> {quiz.views || 0} görüntüleme</span>
@@ -214,7 +205,7 @@ function Profile() {
           {activeSection === 'settings' && (
             <div className="profile-section">
               <h2 style={{ color: 'white', marginBottom: '2rem' }}>Ayarlar</h2>
-              <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 15, padding: '2rem' }}>
+              <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 15, padding: '2rem', maxWidth: 400 }}>
                 <div className="form-group">
                   <label>Görünen Ad</label>
                   <input type="text" className="form-control" value={user.name || ''} readOnly />
@@ -246,7 +237,7 @@ function Profile() {
               </div>
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );

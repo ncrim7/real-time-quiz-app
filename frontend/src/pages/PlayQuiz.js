@@ -57,12 +57,13 @@ function PlayQuiz() {
 
   // Quiz başladığında müziği başlat
   useEffect(() => {
-    if (audioRef.current && musicPlaying) {
-      audioRef.current.volume = 0.25;
-      audioRef.current.play().catch(() => {});
+    const audio = audioRef.current;
+    if (audio && musicPlaying) {
+      audio.volume = 0.25;
+      audio.play().catch(() => {});
     }
     return () => {
-      if (audioRef.current) audioRef.current.pause();
+      if (audio) audio.pause();
     };
   }, [musicPlaying]);
 
@@ -93,16 +94,16 @@ function PlayQuiz() {
   }, [quiz, answers, historySaved]);
 
   // Quiz yükleniyorsa loading mesajı göster
-  if (!quiz) return <div>Yükleniyor...</div>;
+  if (!quiz) return <div style={{textAlign:'center',padding:32}}>Yükleniyor...</div>;
   // Tüm sorular bittiğinde quiz bitti mesajı ve yönlendirme butonları göster
   if (currentQ >= quiz.questions.length) return (
-    <div style={{ padding: 32 }}>
+    <div style={{ textAlign:'center', padding: 32 }}>
       <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
-      <h2>Quiz bitti!</h2>
-      <div>Doğru sayınız: {correctCountRef.current} / {quiz.questions.length}</div>
-      <button onClick={() => navigate('/')}>Ana Sayfa</button>
-      <button style={{ marginLeft: 8 }} onClick={() => navigate('/profile')}>Profilim / Geçmişim</button>
-      <button style={{ marginLeft: 16 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
+      <h2 style={{fontWeight:800, color:'var(--primary)', fontSize:'2rem', marginBottom:12}}>{quiz.title} Bitti!</h2>
+      <div style={{fontSize:20, marginBottom:18}}>Doğru sayınız: <b>{correctCountRef.current} / {quiz.questions.length}</b></div>
+      <button className="btn btn-secondary" onClick={() => navigate('/')}>Ana Sayfa</button>
+      <button className="btn btn-secondary" style={{ marginLeft: 8 }} onClick={() => navigate('/profile')}>Profilim / Geçmişim</button>
+      <button className="btn btn-primary" style={{ marginLeft: 16 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
     </div>
   );
 
@@ -110,22 +111,33 @@ function PlayQuiz() {
   const q = quiz.questions[currentQ];
 
   return (
-    <div style={{ padding: 32 }}>
+    <div style={{ padding: 32, maxWidth: 520, margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 18, boxShadow: '0 4px 24px #6366f122', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <audio ref={audioRef} src={MUSIC_URL} autoPlay loop style={{ display: 'none' }} />
-      <h2>{quiz.title}</h2>
-      <button style={{ marginBottom: 12 }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
-      <div style={{ marginBottom: 16 }}>
-        <b>{q.text}</b>
-        <ul>
+      <h2 style={{fontWeight:800, color:'var(--primary)', fontSize:'2rem', marginBottom:8, textAlign:'center'}}>{quiz.title}</h2>
+      <button className="btn btn-primary" style={{ marginBottom: 18, fontSize:16, borderRadius:10, padding:'0.6rem 1.5rem' }} onClick={() => setMusicPlaying(p => !p)}>{musicPlaying ? 'Müziği Durdur' : 'Müziği Başlat'}</button>
+      <div style={{ marginBottom: 20, width:'100%' }}>
+        <b style={{fontSize:20, display:'block', textAlign:'center', marginBottom:18}}>{q.text}</b>
+        <ul style={{listStyle:'none', padding:0, margin:0, display:'flex', flexDirection:'column', gap:14, alignItems:'center'}}>
           {q.options.map((opt, i) => (
-            <li key={i}>
+            <li key={i} style={{width:'100%'}}>
               <button
+                className="btn btn-secondary"
                 disabled={!!answer}
                 onClick={() => handleAnswer(opt)}
                 style={{
+                  width:'100%',
+                  maxWidth:340,
+                  fontSize:17,
+                  padding:'0.8rem 1.2rem',
+                  borderRadius:12,
+                  margin:'0 auto',
                   opacity: answer && answer !== opt ? 0.5 : 1,
                   cursor: answer ? 'not-allowed' : 'pointer',
-                  background: answer === opt ? '#d1e7dd' : undefined
+                  background: answer === opt ? 'linear-gradient(90deg,#10b981 60%,#6366f1 100%)' : undefined,
+                  color: answer === opt ? '#fff' : undefined,
+                  fontWeight:600,
+                  boxShadow: answer === opt ? '0 4px 16px #10b98133' : '0 2px 8px #6366f122',
+                  transition:'all 0.18s'
                 }}
               >
                 {opt}
@@ -134,9 +146,9 @@ function PlayQuiz() {
           ))}
         </ul>
         {/* Soru için zamanlayıcı */}
-        {showTimer && <QuestionTimer duration={10} onTimeout={handleTimeout} />}
+        {showTimer && <div style={{marginTop:18, textAlign:'center'}}><QuestionTimer duration={10} onTimeout={handleTimeout} /></div>}
         {/* Kullanıcı cevabı */}
-        {answer && <div style={{ color: 'green' }}>Cevabınız: {answer}</div>}
+        {answer && <div style={{ color: '#10b981', fontWeight:700, marginTop:12, textAlign:'center' }}>Cevabınız: {answer}</div>}
       </div>
     </div>
   );

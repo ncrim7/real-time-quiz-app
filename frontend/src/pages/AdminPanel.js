@@ -30,13 +30,13 @@ function AdminPanel() {
 
   useEffect(() => {
     if (tab === 'quizzes') {
-      axios.get('/api/admin/quizzes', { headers: { Authorization: 'Bearer ' + token } })
+      axios.get('https://quiz-master-backend-p6bs.onrender.com/api/admin/quizzes', { headers: { Authorization: 'Bearer ' + token } })
         .then(res => setQuizzes(res.data));
     } else if (tab === 'users') {
-      axios.get('/api/admin/users', { headers: { Authorization: 'Bearer ' + token } })
+      axios.get('https://quiz-master-backend-p6bs.onrender.com/api/admin/users', { headers: { Authorization: 'Bearer ' + token } })
         .then(res => setUsers(res.data));
     } else if (tab === 'analytics' || tab === 'overview') {
-      axios.get('/api/admin/analytics', { headers: { Authorization: 'Bearer ' + token } })
+      axios.get('https://quiz-master-backend-p6bs.onrender.com/api/admin/analytics', { headers: { Authorization: 'Bearer ' + token } })
         .then(res => setAnalytics(res.data));
     }
   }, [tab, token]);
@@ -59,7 +59,7 @@ function AdminPanel() {
         description: editDescription,
         questions: editQuestions
       };
-      const res = await axios.put(`/api/admin/quiz/${editQuiz._id}`, updated, {
+      const res = await axios.put(`https://quiz-master-backend-p6bs.onrender.com/api/admin/quiz/${editQuiz._id}`, updated, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
       });
       setQuizzes(quizzes.map(q => q._id === editQuiz._id ? res.data : q));
@@ -73,7 +73,7 @@ function AdminPanel() {
   // Admin quiz canlı başlatma
   const handleAdminStart = async (quizId) => {
     try {
-      const res = await axios.post(`/api/admin/quiz/${quizId}/start`, {}, {
+      const res = await axios.post(`https://quiz-master-backend-p6bs.onrender.com/api/admin/quiz/${quizId}/start`, {}, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
       });
       const roomCode = res.data.roomCode;
@@ -88,7 +88,7 @@ function AdminPanel() {
   // Admin quiz canlı oturumu sonlandırma
   const handleAdminEndLive = async (quizId) => {
     try {
-      await axios.post(`/api/admin/quiz/${quizId}/end`, {}, {
+      await axios.post(`https://quiz-master-backend-p6bs.onrender.com/api/admin/quiz/${quizId}/end`, {}, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
       });
       setLiveRoomCodes(prev => {
@@ -106,7 +106,7 @@ function AdminPanel() {
   const handleAdminDelete = async (quizId) => {
     if (window.confirm('Bu quiz silinsin mi?')) {
       try {
-        await axios.delete(`/api/admin/quiz/${quizId}`, {
+        await axios.delete(`https://quiz-master-backend-p6bs.onrender.com/api/admin/quiz/${quizId}`, {
           headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
         });
         setQuizzes(quizzes.filter(q => q._id !== quizId));
@@ -118,25 +118,30 @@ function AdminPanel() {
 
   return (
     <div id="admin" className="page" style={{ minHeight: 'calc(100vh - 80px)', background: 'linear-gradient(120deg, #6a11cb 0%, #2575fc 100%)', padding: 0, margin: 0 }}>
-      <div className="dashboard">
-        <div className="sidebar">
-          <h3 style={{ color: 'white', marginBottom: '2rem' }}>Admin Panel</h3>
-          <ul className="sidebar-menu">
+      <div className="dashboard" style={{ display: 'flex', maxWidth: 1200, margin: '0 auto', minHeight: '80vh', padding: '32px 0' }}>
+        <aside className="sidebar" style={{ width: 240, minWidth: 180, background: 'rgba(255,255,255,0.04)', borderRadius: 18, padding: '2.5rem 1.2rem 2rem 1.2rem', marginRight: 32, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', boxShadow: '0 2px 12px #6366f111', height: 'fit-content', position: 'sticky', top: 32 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
+            <div style={{ width: 70, height: 70, borderRadius: '50%', background: 'linear-gradient(45deg, #6366f1, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', color: 'white', fontWeight: 700, marginBottom: 10 }}>A</div>
+            <div style={{ color: 'white', fontWeight: 700, fontSize: 18, marginBottom: 2 }}>admin</div>
+            <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, marginBottom: 2 }}>@admin</div>
+            <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13 }}>Admin Panel</div>
+          </div>
+          <ul className="sidebar-menu" style={{ width: '100%', listStyle: 'none', padding: 0, margin: 0 }}>
             {sections.map(sec => (
-              <li key={sec.key}>
-                <button className={tab === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setTab(sec.key); }} style={{ background: 'none', border: 'none', color: 'white', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '1rem', width: '100%' }}>
+              <li key={sec.key} style={{ width: '100%', marginBottom: 6 }}>
+                <button className={tab === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setTab(sec.key); }} style={{ background: tab === sec.key ? 'rgba(255,255,255,0.13)' : 'none', border: 'none', color: 'white', padding: '0.7rem 1rem', fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.7rem', borderRadius: 10, fontWeight: 600, cursor: 'pointer', transition: 'background 0.18s' }}>
                   {sec.icon} {sec.label}
                 </button>
               </li>
             ))}
           </ul>
-        </div>
-        <div className="dashboard-content">
+        </aside>
+        <main className="dashboard-content" style={{ flex: 1, minWidth: 0 }}>
           {/* Overview */}
           {tab === 'overview' && (
             <div className="admin-section">
               <h2 style={{ color: 'white', marginBottom: '2rem' }}>Gösterge Paneli Genel Bakış</h2>
-              <div className="stats-grid">
+              <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
                 <div className="stat-card">
                   <div className="stat-number">{analytics.userCount || '—'}</div>
                   <div>Toplam Kullanıcı</div>
@@ -173,7 +178,7 @@ function AdminPanel() {
                       <div style={{ fontWeight: 600 }}>{u.name || u.username}</div>
                       <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>{u.email}</div>
                     </div>
-                    <div style={{ color: 'rgba(255,255,255,0.7)' }}>{new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                    <div style={{ color: 'rgba(255,255,255,0.7)' }}>{new Date(u.createdAt).toLocaleDateString('tr-TR', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                     <div>{u.createdQuizzes ? u.createdQuizzes.length : 0}</div>
                     <div>
                       <button className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>
@@ -189,14 +194,14 @@ function AdminPanel() {
           {tab === 'quizzes' && (
             <div className="admin-section">
               <h2 style={{ color: 'white', marginBottom: '2rem' }}>Tüm Quizler</h2>
-              <div className="quiz-grid">
+              <div className="quiz-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
                 {quizzes.map(q => (
-                  <div className="quiz-card" key={q._id}>
-                    <div className="quiz-header">
-                      <h3>{q.title}</h3>
-                      <span className={`quiz-status ${q.isActive ? 'status-live' : 'status-passive'}`}>{q.isActive ? 'LIVE' : 'PASSIVE'}</span>
+                  <div className="quiz-card" key={q._id} style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 14, padding: '1.5rem', boxShadow: '0 2px 8px #6366f111' }}>
+                    <div className="quiz-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <h3 style={{ color: 'white', fontSize: 18 }}>{q.title}</h3>
+                      <span className={`quiz-status ${q.isActive ? 'status-live' : 'status-passive'}`} style={{ color: q.isActive ? '#10b981' : '#ff6b6b', fontWeight: 600, fontSize: 13 }}>{q.isActive ? 'LIVE' : 'PASSIVE'}</span>
                     </div>
-                    <p>{q.description}</p>
+                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15 }}>{q.description}</p>
                     <div style={{ marginTop: '1rem', fontSize: '0.9rem', opacity: 0.8 }}>
                       <span style={{ marginRight: 16 }}><i className="fas fa-users"></i> {q.participants || 0} participants</span>
                       <span><i className="fas fa-eye" style={{ marginLeft: 8 }}></i> {q.views || 0} views</span>
@@ -275,10 +280,10 @@ function AdminPanel() {
           {tab === 'analytics' && (
             <div className="admin-section">
               <h2 style={{ color: 'white', marginBottom: '2rem' }}>Analiz</h2>
-              <div>Toplam Quiz: {analytics.quizCount}</div>
-              <div>Toplam Kullanıcı: {analytics.userCount}</div>
-              <div>En Çok Oynanan Quizler:</div>
-              <ul>
+              <div style={{ color: 'white', marginBottom: 12 }}>Toplam Quiz: {analytics.quizCount}</div>
+              <div style={{ color: 'white', marginBottom: 12 }}>Toplam Kullanıcı: {analytics.userCount}</div>
+              <div style={{ color: 'white', marginBottom: 12 }}>En Çok Oynanan Quizler:</div>
+              <ul style={{ color: 'white', marginLeft: 18 }}>
                 {(analytics.mostPlayed || []).map((q, i) => (
                   <li key={i}>{q._id} ({q.count} kez)</li>
                 ))}
@@ -294,7 +299,7 @@ function AdminPanel() {
               </div>
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
