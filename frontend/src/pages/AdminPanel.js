@@ -1,5 +1,6 @@
 // Admin Paneli ana sayfası
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -13,6 +14,7 @@ const sections = [
   { key: 'quizzes', label: 'Quizzes', icon: <ListIcon /> },
   { key: 'analytics', label: 'Analytics', icon: <BarChartIcon /> },
   { key: 'reports', label: 'Reports', icon: <FlagIcon /> },
+  { key: 'logs', label: 'Logs', icon: <span style={{fontWeight:700,fontSize:18}}>📝</span> },
 ];
 
 function AdminPanel() {
@@ -27,6 +29,7 @@ function AdminPanel() {
   const [editQuestions, setEditQuestions] = useState([]);
   const [liveRoomCodes, setLiveRoomCodes] = useState({});
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (tab === 'quizzes') {
@@ -129,9 +132,15 @@ function AdminPanel() {
           <ul className="sidebar-menu" style={{ width: '100%', listStyle: 'none', padding: 0, margin: 0 }}>
             {sections.map(sec => (
               <li key={sec.key} style={{ width: '100%', marginBottom: 6 }}>
-                <button className={tab === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setTab(sec.key); }} style={{ background: tab === sec.key ? 'rgba(255,255,255,0.13)' : 'none', border: 'none', color: 'white', padding: '0.7rem 1rem', fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.7rem', borderRadius: 10, fontWeight: 600, cursor: 'pointer', transition: 'background 0.18s' }}>
-                  {sec.icon} {sec.label}
-                </button>
+                {sec.key === 'logs' ? (
+                  <button onClick={() => navigate('/admin/login-logs')} style={{ background: 'none', border: 'none', color: 'white', padding: '0.7rem 1rem', fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.7rem', borderRadius: 10, fontWeight: 600, cursor: 'pointer', transition: 'background 0.18s' }}>
+                    {sec.icon} {sec.label}
+                  </button>
+                ) : (
+                  <button className={tab === sec.key ? 'active' : ''} onClick={e => { e.preventDefault(); setTab(sec.key); }} style={{ background: tab === sec.key ? 'rgba(255,255,255,0.13)' : 'none', border: 'none', color: 'white', padding: '0.7rem 1rem', fontSize: '1rem', width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.7rem', borderRadius: 10, fontWeight: 600, cursor: 'pointer', transition: 'background 0.18s' }}>
+                    {sec.icon} {sec.label}
+                  </button>
+                )}
               </li>
             ))}
           </ul>

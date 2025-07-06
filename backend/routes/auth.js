@@ -3,6 +3,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import LoginLog from '../models/LoginLog.js';
 
 const router = express.Router();
 
@@ -36,6 +37,13 @@ router.post('/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: 'Şifre hatalı.' });
     // JWT token oluştur
     const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // Giriş logunu kaydet
+    if (req.loginLog) {
+      console.log('Login log kaydediliyor:', req.loginLog);
+      await LoginLog.create({ ...req.loginLog, user: user._id });
+    } else {
+      console.log('req.loginLog YOK!');
+    }
     res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
   } catch (err) {
     res.status(500).json({ message: 'Sunucu hatası.' });

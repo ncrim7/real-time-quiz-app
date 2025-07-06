@@ -11,6 +11,7 @@ import PlayQuiz from './pages/PlayQuiz';
 import Profile from './pages/Profile';
 import Lobby from './pages/Lobby';
 import AdminPanel from './pages/AdminPanel';
+import LoginLogs from './pages/LoginLogs';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import Footer from './components/Footer';
@@ -32,6 +33,7 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/lobby" element={<ProtectedRoute><Lobby /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+          <Route path="/admin/login-logs" element={<ProtectedRoute><LoginLogs /></ProtectedRoute>} />
         </Routes>
         <Footer />
       </div>

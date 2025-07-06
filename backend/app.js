@@ -12,8 +12,10 @@ import authRoutes from './routes/auth.js'; // Kimlik doğrulama endpointleri
 import userRoutes from './routes/user.js'; // Kullanıcı endpointleri
 import quizRoutes from './routes/quiz.js'; // Quiz endpointleri
 import adminRoutes from './routes/admin.js'; // Admin endpointleri
+import loginLogRoutes from './routes/loginLog.js';
 import Quiz from './models/Quiz.js';
 import User from './models/User.js';
+import loginLogger from './middleware/loginLogger.js';
 
 dotenv.config();
 
@@ -36,12 +38,14 @@ app.use(cors(
   }
 ));
 app.use(bodyParser.json());
+app.use(loginLogger);
 
 // API route'ları
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/login-logs', loginLogRoutes);
 
 // Oda skorları ve quiz state'leri için bellek içi objeler
 const roomQuizState = {};
