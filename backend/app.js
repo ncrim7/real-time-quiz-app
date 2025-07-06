@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors(
   {
-    origin: ["https://kahoot-clone-frontend.vercel.app", "http://localhost:3000"], // İzin verilen frontend URL'leri
+    origin: ["https://real-time-quiz-app-w1c1.vercel.app", "http://localhost:3000"], // İzin verilen frontend URL'leri
     methods: ["GET", "POST"], // İzin verilen HTTP metodları
     credentials: true // Çerezler ve kimlik doğrulama bilgileri gönderilsin
   }
